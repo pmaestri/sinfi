@@ -56,6 +56,7 @@ interface Product {
   category: string;
   image: string;
   imageUrl: string;
+  imageUrls?: string[];
   waitTimeMinutes: number;
   isOutOfStock?: boolean;
   flavorOptions?: string[];
@@ -281,20 +282,20 @@ const PRODUCTS: Product[] = [
   { id: 333, name: 'Cookie Decorada', venue: 'Rústica', description: 'Cookie decorada individual.', price: 4650, category: 'Pastelería', image: '🍪', imageUrl: '/assets/Rustica/pasteleria/cookie-decorada.webp', waitTimeMinutes: 1 },
   { id: 334, name: 'Muffins', venue: 'Rústica', description: 'Muffins dulces individuales.', price: 4700, category: 'Pastelería', image: '🧁', imageUrl: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
   { id: 335, name: 'Barra Proteica Vegana', venue: 'Rústica', description: 'Barra proteica vegana Wiki.', price: 4280, category: 'Pastelería', image: '🥜', imageUrl: '/assets/Rustica/pasteleria/barra-proteica-vegana.webp', waitTimeMinutes: 1 },
-  { id: 336, name: 'Jugos de Frutas PuraFrutta', venue: 'Rústica', description: 'Jugo frutal listo para llevar.', price: 2000, category: 'Bebidas', image: '🧃', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 337, name: 'Jugo de Frutas 100% Natural 500 cc', venue: 'Rústica', description: 'Jugo natural en presentación de 500 cc.', price: 7050, category: 'Bebidas', image: '🧃', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 338, name: 'Jugo de Frutas 100% Natural 300 cc', venue: 'Rústica', description: 'Jugo natural en presentación de 300 cc.', price: 5000, category: 'Bebidas', image: '🧃', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 336, name: 'Jugos de Frutas PuraFrutta', venue: 'Rústica', description: 'Jugo frutal listo para llevar.', price: 2000, category: 'Bebidas', image: '🧃', imageUrl: '/assets/Rustica/bebidas/jugo-purafrutta.webp', waitTimeMinutes: 1 },
+  { id: 337, name: 'Jugo de Frutas 100% Natural 500 cc', venue: 'Rústica', description: 'Jugo natural en presentación de 500 cc.', price: 7050, category: 'Bebidas', image: '🧃', imageUrl: '/assets/Rustica/bebidas/jugo-natural-500cc.webp', waitTimeMinutes: 1 },
+  { id: 338, name: 'Jugo de Frutas 100% Natural 300 cc', venue: 'Rústica', description: 'Jugo natural en presentación de 300 cc.', price: 5000, category: 'Bebidas', image: '🧃', imageUrl: '/assets/Rustica/bebidas/jugo-natural-300cc.webp', waitTimeMinutes: 1 },
   { id: 339, name: 'Agua con Gas', venue: 'Rústica', description: 'Agua con gas fría.', price: 2900, category: 'Bebidas', image: '💧', imageUrl: 'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 340, name: 'Gaseosa', venue: 'Rústica', description: 'Bebida gaseosa fría.', price: 3180, category: 'Bebidas', image: '🥤', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 341, name: 'Tazón de Cerámica XL', venue: 'Rústica', description: 'Tazón reutilizable de cerámica tamaño XL.', price: 22400, category: 'Otros', image: '🏺', imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 342, name: 'Tazón de Cerámica', venue: 'Rústica', description: 'Tazón reutilizable de cerámica.', price: 17500, category: 'Otros', image: '🏺', imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 343, name: 'Vaso Impreso Rusti', venue: 'Rústica', description: 'Vaso con diseño impreso de Rusti.', price: 5800, category: 'Otros', image: '🥤', imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 344, name: 'Promo del Día', venue: 'Rústica', description: 'Consultá por la opción disponible de hoy.', price: 8900, category: 'Promos', image: '✨', imageUrl: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
-  { id: 345, name: 'Promo Pastelería', venue: 'Rústica', description: 'Cuadrado más café 12 oz.', price: 10500, category: 'Promos', image: '🍰', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', waitTimeMinutes: 5 },
-  { id: 346, name: 'Promo Tostado', venue: 'Rústica', description: 'Tostado de pan árabe más café 12 oz.', price: 12200, category: 'Promos', image: '🥪', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', waitTimeMinutes: 6 },
-  { id: 347, name: 'Ciabatta Caesar', venue: 'Rústica', description: 'Sándwich ciabatta estilo caesar.', price: 9750, category: 'Almuerzos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 7 },
-  { id: 348, name: 'Grillado de Lomito y Cheddar', venue: 'Rústica', description: 'Sándwich grillado con lomito y cheddar.', price: 8950, category: 'Almuerzos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 7 },
-  { id: 349, name: 'Fosforito Lomito y Queso', venue: 'Rústica', description: 'Fosforito relleno de lomito y queso.', price: 6700, category: 'Almuerzos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1608039755401-742074f0548d?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
+  { id: 345, name: 'Promo Pastelería', venue: 'Rústica', description: 'Cuadrado más café 12 oz.', price: 10500, category: 'Promos', image: '🍰', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', imageUrls: ['/assets/Rustica/cafe/cafe-12oz.webp', '/assets/Rustica/pasteleria/cuadrado-dulce.webp'], waitTimeMinutes: 5 },
+  { id: 346, name: 'Promo Tostado', venue: 'Rústica', description: 'Tostado de pan árabe más café 12 oz.', price: 12200, category: 'Promos', image: '🥪', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', imageUrls: ['/assets/Rustica/cafe/cafe-12oz.webp', 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=240&h=240&q=80'], waitTimeMinutes: 6 },
+  { id: 347, name: 'Ciabatta Caesar', venue: 'Rústica', description: 'Sándwich ciabatta estilo caesar.', price: 9750, category: 'Almuerzos', image: '🥪', imageUrl: '/assets/Rustica/almuerzos/ciabatta-caesar.jpeg', waitTimeMinutes: 7 },
+  { id: 348, name: 'Grillado de Lomito y Cheddar', venue: 'Rústica', description: 'Sándwich grillado con lomito y cheddar.', price: 8950, category: 'Almuerzos', image: '🥪', imageUrl: '/assets/Rustica/almuerzos/grillado-lomito-cheddar.jpeg', waitTimeMinutes: 7 },
+  { id: 349, name: 'Fosforito Lomito y Queso', venue: 'Rústica', description: 'Fosforito relleno de lomito y queso.', price: 6700, category: 'Almuerzos', image: '🥪', imageUrl: '/assets/Rustica/almuerzos/fosforito-lomito-queso.avif', waitTimeMinutes: 6 },
 ];
 
 const MAX_WAIT_TIME_MINUTES = 30;
@@ -374,6 +375,7 @@ const getCanonicalCategory = (category: string) =>
 const CATEGORY_NAME_PREFIXES: Record<string, string[]> = {
   alfajores: ['Alfajor', 'Alfajores', 'Alf.'],
   cafes: ['Café', 'Cafés'],
+  cafeteria: ['Café', 'Cafés'],
   caramelos: ['Caramelo', 'Caramelos'],
   cereales: ['Cereal', 'Cereales'],
   chicles: ['Chicle', 'Chicles'],
@@ -559,6 +561,9 @@ const getVenueBadge = (venue: string) => {
     </span>
   );
 };
+
+const getProductImageUrls = (product: Product) =>
+  product.imageUrls?.length ? product.imageUrls : [product.imageUrl];
 
 export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLogout }: HomeProps) {
   const venues = ['La Cantina', 'Starbucks', 'Rústica'];
@@ -829,90 +834,99 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
     });
   };
 
-  const renderProductCard = (product: Product) => (
-    <div
-      key={product.id}
-      onClick={() => openProductDetail(product)}
-      className={`relative flex items-center gap-3 rounded-xl border-2 p-3 shadow-md transition-colors cursor-pointer ${
-        product.isOutOfStock
-          ? 'bg-gray-100 border-gray-200 opacity-80'
-          : 'bg-white border-amber-100 hover:border-yellow-700'
-      }`}
-    >
-      {product.category === 'Combos' && !product.isOutOfStock && (
-        <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md border-2 border-white">
-          ¡COMBO!
-        </div>
-      )}
-      {product.isOutOfStock && (
-        <div className="absolute -top-2 -right-2 bg-gray-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md border-2 border-white">
-          Sin stock
-        </div>
-      )}
-      <div className="h-[88px] w-[88px] shrink-0 overflow-hidden rounded-xl border-2 border-amber-100 bg-amber-100 shadow-sm">
-        <img
-          src={product.imageUrl}
-          alt={formatMenuText(product.name)}
-          className={`w-full h-full object-cover ${product.isOutOfStock ? 'grayscale' : ''}`}
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-            const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
-            if (fallback) fallback.style.display = 'flex';
-          }}
-        />
-        <div className="hidden w-full h-full items-center justify-center px-2 text-center text-xs font-bold text-yellow-900">
-          Sin foto
-        </div>
-      </div>
-      <div className="flex-1">
-        <h3 className={`text-[15px] font-semibold leading-tight ${product.isOutOfStock ? 'text-gray-500' : 'text-gray-900'}`}>
-          {getProductListName(product, selectedCategory)}
-        </h3>
-        <p className={`mt-1 text-[17px] font-bold ${product.isOutOfStock ? 'text-gray-500' : 'text-yellow-900'}`}>{formatPrice(product.price)}</p>
-        {!product.isOutOfStock && (
-          <div className="mt-2 space-y-1">
-            <div className="flex items-center justify-between text-[11px] font-bold text-gray-600">
-              <span>Tiempo estimado</span>
-              <span>{product.waitTimeMinutes} min</span>
-            </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-amber-100">
-              <div
-                className={`h-full rounded-full ${getWaitTimeBarColor(product.waitTimeMinutes)}`}
-                style={{ width: `${(product.waitTimeMinutes / MAX_WAIT_TIME_MINUTES) * 100}%` }}
-              />
-            </div>
-            <div className="flex justify-between text-[9px] font-bold text-gray-400">
-              <span>0'</span>
-              <span>30'</span>
-            </div>
-          </div>
-        )}
-      </div>
-      <button
-        onClick={(event) => {
-          event.stopPropagation();
-          if (!product.isOutOfStock) {
-            if (getProductSelectionOptions(product).length) {
-              openProductDetail(product);
-              return;
-            }
+  const renderProductCard = (product: Product) => {
+    const productImageUrls = getProductImageUrls(product);
 
-            onAddToCart(product);
-          }
-        }}
-        disabled={product.isOutOfStock}
-        className={`rounded-full p-2.5 transition-all shadow-md ${
+    return (
+      <div
+        key={product.id}
+        onClick={() => openProductDetail(product)}
+        className={`relative flex items-center gap-3 rounded-xl border-2 p-3 shadow-md transition-colors cursor-pointer ${
           product.isOutOfStock
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-yellow-800 text-white hover:bg-yellow-900 hover:scale-110 active:scale-95'
+            ? 'bg-gray-100 border-gray-200 opacity-80'
+            : 'bg-white border-amber-100 hover:border-yellow-700'
         }`}
       >
-        <Plus className="h-5 w-5" />
-      </button>
-    </div>
-  );
+        {product.category === 'Combos' && !product.isOutOfStock && (
+          <div className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md border-2 border-white">
+            ¡COMBO!
+          </div>
+        )}
+        {product.isOutOfStock && (
+          <div className="absolute -top-2 -right-2 bg-gray-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md border-2 border-white">
+            Sin stock
+          </div>
+        )}
+        <div className={`h-[88px] w-[88px] shrink-0 overflow-hidden rounded-xl border-2 border-amber-100 bg-amber-100 shadow-sm ${productImageUrls.length > 1 ? 'grid grid-cols-2 gap-0.5 p-0.5' : ''}`}>
+          {productImageUrls.map((imageUrl, index) => (
+            <div key={`${product.id}-${imageUrl}`} className="relative h-full min-h-0 overflow-hidden rounded-lg bg-amber-100">
+              <img
+                src={imageUrl}
+                alt={`${formatMenuText(product.name)} ${index + 1}`}
+                className={`w-full h-full object-cover ${product.isOutOfStock ? 'grayscale' : ''}`}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
+              <div className="hidden w-full h-full items-center justify-center px-1 text-center text-[10px] font-bold text-yellow-900">
+                Sin foto
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex-1">
+          <h3 className={`text-[15px] font-semibold leading-tight ${product.isOutOfStock ? 'text-gray-500' : 'text-gray-900'}`}>
+            {getProductListName(product, selectedCategory)}
+          </h3>
+          <p className={`mt-1 text-[17px] font-bold ${product.isOutOfStock ? 'text-gray-500' : 'text-yellow-900'}`}>{formatPrice(product.price)}</p>
+          {!product.isOutOfStock && (
+            <div className="mt-2 space-y-1">
+              <div className="flex items-center justify-between text-[11px] font-bold text-gray-600">
+                <span>Tiempo estimado</span>
+                <span>{product.waitTimeMinutes} min</span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-amber-100">
+                <div
+                  className={`h-full rounded-full ${getWaitTimeBarColor(product.waitTimeMinutes)}`}
+                  style={{ width: `${(product.waitTimeMinutes / MAX_WAIT_TIME_MINUTES) * 100}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-[9px] font-bold text-gray-400">
+                <span>0'</span>
+                <span>30'</span>
+              </div>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={(event) => {
+            event.stopPropagation();
+            if (!product.isOutOfStock) {
+              if (getProductSelectionOptions(product).length) {
+                openProductDetail(product);
+                return;
+              }
+
+              onAddToCart(product);
+            }
+          }}
+          disabled={product.isOutOfStock}
+          className={`rounded-full p-2.5 transition-all shadow-md ${
+            product.isOutOfStock
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-yellow-800 text-white hover:bg-yellow-900 hover:scale-110 active:scale-95'
+          }`}
+        >
+          <Plus className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  };
 
   if (selectedProduct) {
+    const selectedProductImageUrls = getProductImageUrls(selectedProduct);
     const selectionOptions = getProductSelectionOptions(selectedProduct);
     const requiresFlavorSelection = Boolean(selectionOptions.length);
     const selectedProductSelectionsForCart = buildProductSelections(selectedProduct);
@@ -939,12 +953,16 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
           <ArrowLeft className="h-5 w-5" />
         </button>
 
-        <div className="relative h-80 bg-amber-100">
-          <img
-            src={selectedProduct.imageUrl}
-            alt={formatMenuText(selectedProduct.name)}
-            className={`h-full w-full object-cover ${selectedProduct.isOutOfStock ? 'grayscale' : ''}`}
-          />
+        <div className={`relative h-80 bg-amber-100 ${selectedProductImageUrls.length > 1 ? 'grid grid-cols-2 gap-1 p-1' : ''}`}>
+          {selectedProductImageUrls.map((imageUrl, index) => (
+            <div key={`${selectedProduct.id}-${imageUrl}`} className="h-full min-h-0 overflow-hidden bg-amber-100">
+              <img
+                src={imageUrl}
+                alt={`${formatMenuText(selectedProduct.name)} ${index + 1}`}
+                className={`h-full w-full object-cover ${selectedProduct.isOutOfStock ? 'grayscale' : ''}`}
+              />
+            </div>
+          ))}
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 pb-32 space-y-4">
