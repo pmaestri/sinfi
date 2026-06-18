@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ChevronDown, ChevronUp, Croissant, LogOut, MapPin, Minus, Plus, RotateCcw, SlidersHorizontal, Tag, Trash2 } from 'lucide-react';
 import starbucksLogo from '../../assets/starbucks-logo.png';
 import { formatMenuText } from '../utils/menuText';
@@ -112,12 +112,12 @@ const PRODUCTS: Product[] = [
   { id: 37, name: 'Bonobon', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 579, category: 'Golosinas', image: '🍫', imageUrl: '/assets/Cantina/golosinas/bonobon.png', waitTimeMinutes: 1 },
   { id: 38, name: 'Cadbury 29 g', venue: 'La Cantina', description: 'Chocolate disponible en La Cantina.', price: 3300, category: 'Chocolates', image: '🍫', imageUrl: '/assets/Cantina/chocolates/cadbury-29g.png', waitTimeMinutes: 1 },
   { id: 41, name: 'Halls', venue: 'La Cantina', description: 'Elegí el gusto antes de agregar el caramelo.', price: 1143, category: 'Caramelos', image: '🍬', imageUrl: '/assets/Cantina/caramelos/halls.png', waitTimeMinutes: 1, flavorOptions: ['Frutilla', 'Mentol', 'Menta', 'Fuerte', 'Sandía'] },
-  { id: 43, name: 'Cereal Flow', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1477, category: 'Cereales', image: '🥣', imageUrl: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 44, name: 'Cereal Fort', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1455, category: 'Cereales', image: '🥣', imageUrl: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 45, name: 'Cereal Mix', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1275, category: 'Cereales', image: '🥣', imageUrl: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 43, name: 'Cereal Flow', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1477, category: 'Cereales', image: '🥣', imageUrl: '/assets/Cantina/cereales/cereal-flow.webp', waitTimeMinutes: 1 },
+  { id: 44, name: 'Cereal Fort', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1455, category: 'Cereales', image: '🥣', imageUrl: '/assets/Cantina/cereales/cereal-fort.webp', waitTimeMinutes: 1 },
+  { id: 45, name: 'Cereal Mix', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1275, category: 'Cereales', image: '🥣', imageUrl: '/assets/Cantina/cereales/cereal-mix.webp', waitTimeMinutes: 1 },
   { id: 46, name: 'Cerealitas', venue: 'La Cantina', description: 'Galletitas o snack de cereal disponible en La Cantina.', price: 3014, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 47, name: 'Chicle Beldent', venue: 'La Cantina', description: 'Chicle disponible en La Cantina.', price: 1034, category: 'Chicles', image: '🍬', imageUrl: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 48, name: 'Chicle Beldent Tachito', venue: 'La Cantina', description: 'Chicle disponible en La Cantina.', price: 5104, category: 'Chicles', image: '🍬', imageUrl: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 47, name: 'Chicle Beldent', venue: 'La Cantina', description: 'Chicle disponible en La Cantina.', price: 1034, category: 'Chicles', image: '🍬', imageUrl: '/assets/Cantina/chicles/chicle-beldent.webp', waitTimeMinutes: 1 },
+  { id: 48, name: 'Chicle Beldent Tachito', venue: 'La Cantina', description: 'Chicle disponible en La Cantina.', price: 5104, category: 'Chicles', image: '🍬', imageUrl: '/assets/Cantina/chicles/chicle-beldent-tachito.webp', waitTimeMinutes: 1 },
   { id: 49, name: 'ChocoBar', venue: 'La Cantina', description: 'Chocolate disponible en La Cantina.', price: 1455, category: 'Chocolates', image: '🍫', imageUrl: '/assets/Cantina/chocolates/chocobar.png', waitTimeMinutes: 1 },
   { id: 50, name: 'Chocolate Block', venue: 'La Cantina', description: 'Chocolate disponible en La Cantina.', price: 2325, category: 'Chocolates', image: '🍫', imageUrl: '/assets/Cantina/chocolates/block.png', waitTimeMinutes: 1 },
   { id: 80, name: 'Milka 20 g', venue: 'La Cantina', description: 'Chocolate disponible en La Cantina.', price: 1455, category: 'Chocolates', image: '🍫', imageUrl: '/assets/Cantina/chocolates/milka-20g.png', waitTimeMinutes: 1 },
@@ -131,21 +131,21 @@ const PRODUCTS: Product[] = [
   { id: 57, name: 'Dos Corazones', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 3326, category: 'Golosinas', image: '🍫', imageUrl: '/assets/Cantina/golosinas/dos-corazones.png', waitTimeMinutes: 1 },
   { id: 58, name: 'Elite', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 665, category: 'Golosinas', image: '🍬', imageUrl: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 59, name: 'Flynn Paff', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 145, category: 'Golosinas', image: '🍬', imageUrl: '/assets/Cantina/golosinas/flynn-paff.png', waitTimeMinutes: 1 },
-  { id: 60, name: 'Frutos Secos Energía', venue: 'La Cantina', description: 'Snack disponible en La Cantina.', price: 7235, category: 'Frutos secos', image: '🥜', imageUrl: 'https://images.unsplash.com/photo-1599599810694-b5b37304c041?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 61, name: 'Frutos Secos Proteína', venue: 'La Cantina', description: 'Snack disponible en La Cantina.', price: 6077, category: 'Frutos secos', image: '🥜', imageUrl: 'https://images.unsplash.com/photo-1599599810694-b5b37304c041?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 62, name: 'Galletitas 9 de Oro', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1736, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 63, name: 'Galletitas Amor', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1871, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 64, name: 'Galletitas Criollitas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1447, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 65, name: 'Galletitas Don Satur', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1767, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 66, name: 'Galletitas Melba', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1881, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 67, name: 'Galletitas Merengadas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1920, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 68, name: 'Galletitas Oreo', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 2658, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 69, name: 'Galletitas Oreo Maní', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 2605, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 70, name: 'Galletitas Pepas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1477, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 71, name: 'Galletitas Pepitos', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 2658, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 72, name: 'Galletitas Rumba', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1871, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 73, name: 'Galletitas Sonrisas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1871, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 74, name: 'Galletitas Surtidas Bagley / Terrabusi', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 4365, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 60, name: 'Frutos Secos Energía', venue: 'La Cantina', description: 'Snack disponible en La Cantina.', price: 7235, category: 'Frutos secos', image: '🥜', imageUrl: '/assets/Cantina/frutos-secos/frutos-secos-energia.webp', waitTimeMinutes: 1 },
+  { id: 61, name: 'Frutos Secos Proteína', venue: 'La Cantina', description: 'Snack disponible en La Cantina.', price: 6077, category: 'Frutos secos', image: '🥜', imageUrl: '/assets/Cantina/frutos-secos/frutos-secos-proteina.avif', waitTimeMinutes: 1 },
+  { id: 62, name: 'Galletitas 9 de Oro', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1736, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-9-de-oro.webp', waitTimeMinutes: 1 },
+  { id: 63, name: 'Galletitas Amor', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1871, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-amor.webp', waitTimeMinutes: 1 },
+  { id: 64, name: 'Galletitas Criollitas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1447, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-criollitas.webp', waitTimeMinutes: 1 },
+  { id: 65, name: 'Galletitas Don Satur', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1767, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-don-satur.webp', waitTimeMinutes: 1 },
+  { id: 66, name: 'Galletitas Melba', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1881, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-melba.webp', waitTimeMinutes: 1 },
+  { id: 67, name: 'Galletitas Merengadas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1920, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-merengadas.webp', waitTimeMinutes: 1 },
+  { id: 68, name: 'Galletitas Oreo', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 2658, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-oreo.webp', waitTimeMinutes: 1 },
+  { id: 69, name: 'Galletitas Oreo Maní', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 2605, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-oreo-mani.webp', waitTimeMinutes: 1 },
+  { id: 70, name: 'Galletitas Pepas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1477, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-pepas.webp', waitTimeMinutes: 1 },
+  { id: 71, name: 'Galletitas Pepitos', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 2658, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-pepitos.webp', waitTimeMinutes: 1 },
+  { id: 72, name: 'Galletitas Rumba', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1871, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-rumba.webp', waitTimeMinutes: 1 },
+  { id: 73, name: 'Galletitas Sonrisas', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1871, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-sonrisas.webp', waitTimeMinutes: 1 },
+  { id: 74, name: 'Galletitas Surtidas Bagley / Terrabusi', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 4365, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/galletitas-surtidas-bagley-terrabusi.webp', waitTimeMinutes: 1 },
   { id: 75, name: 'Habanitos y Mini Rhodesia', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 3000, category: 'Golosinas', image: '🍫', imageUrl: '/assets/Cantina/golosinas/habanitos-mini-rhodesia.png', waitTimeMinutes: 1 },
   { id: 76, name: 'Kesitas / Rex', venue: 'La Cantina', description: 'Snack disponible en La Cantina.', price: 3014, category: 'Snacks', image: '🧀', imageUrl: '/assets/snacks/kesitas-rex.png', waitTimeMinutes: 1 },
   { id: 77, name: 'Maná', venue: 'La Cantina', description: 'Elegí el gusto antes de agregar la galletita.', price: 1559, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/golosinas/mana.png', waitTimeMinutes: 1, flavorOptions: ['Con Leche', 'De Chocolate', 'Vainilla'] },
@@ -161,11 +161,11 @@ const PRODUCTS: Product[] = [
   { id: 92, name: 'Sugus Confitados', venue: 'La Cantina', description: 'Caramelos disponibles en La Cantina.', price: 1871, category: 'Caramelos', image: '🍬', imageUrl: '/assets/Cantina/caramelos/sugus-confitados.png', waitTimeMinutes: 1 },
   { id: 93, name: 'Tic Tac', venue: 'La Cantina', description: 'Elegí el gusto antes de agregar el caramelo.', price: 1455, category: 'Caramelos', image: '🍬', imageUrl: '/assets/Cantina/caramelos/tic-tac.png', waitTimeMinutes: 1, flavorOptions: ['Menta', 'Naranja', 'Dupla Frutilla', 'Mix de Frutas', 'Cereza y Maracuyá', 'Menta Fresca'] },
   { id: 94, name: 'Tita', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 1143, category: 'Golosinas', image: '🍫', imageUrl: '/assets/Cantina/golosinas/tita.png', waitTimeMinutes: 1 },
-  { id: 95, name: 'Topline', venue: 'La Cantina', description: 'Chicle disponible en La Cantina.', price: 1477, category: 'Chicles', image: '🍬', imageUrl: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 96, name: 'Traviata', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1447, category: 'Galletitas', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 95, name: 'Topline', venue: 'La Cantina', description: 'Chicle disponible en La Cantina.', price: 1477, category: 'Chicles', image: '🍬', imageUrl: '/assets/Cantina/chicles/topline.webp', waitTimeMinutes: 1 },
+  { id: 96, name: 'Traviata', venue: 'La Cantina', description: 'Galletitas disponibles en La Cantina.', price: 1447, category: 'Galletitas', image: '🍪', imageUrl: '/assets/Cantina/galletitas/traviata.webp', waitTimeMinutes: 1 },
   { id: 97, name: 'Turrón', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 437, category: 'Golosinas', image: '🍬', imageUrl: '/assets/Cantina/golosinas/turron.png', waitTimeMinutes: 1 },
-  { id: 98, name: 'Yerba 1 kg', venue: 'La Cantina', description: 'Producto disponible en La Cantina.', price: 5067, category: 'Yerbas', image: '🧉', imageUrl: 'https://images.unsplash.com/photo-1663552728001-4f9c2f4a5d9a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 99, name: 'Yerba 500 g', venue: 'La Cantina', description: 'Producto disponible en La Cantina.', price: 3617, category: 'Yerbas', image: '🧉', imageUrl: 'https://images.unsplash.com/photo-1663552728001-4f9c2f4a5d9a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 98, name: 'Yerba 1 kg', venue: 'La Cantina', description: 'Producto disponible en La Cantina.', price: 5067, category: 'Yerbas', image: '🧉', imageUrl: '/assets/Cantina/yerbas/yerba-1kg.webp', waitTimeMinutes: 1 },
+  { id: 99, name: 'Yerba 500 g', venue: 'La Cantina', description: 'Producto disponible en La Cantina.', price: 3617, category: 'Yerbas', image: '🧉', imageUrl: '/assets/Cantina/yerbas/yerba-500g.webp', waitTimeMinutes: 1 },
   { id: 101, name: 'Espresso', venue: 'Starbucks', description: 'Café espresso servido en barra.', price: 3900, category: 'Cafés', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
   { id: 102, name: 'Latte / Cappuccino Alto', venue: 'Starbucks', description: 'Bebida caliente de espresso con leche en tamaño alto.', price: 5500, category: 'Cafés', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
   { id: 103, name: 'Caramel Macchiato Alto', venue: 'Starbucks', description: 'Espresso con leche y caramelo en tamaño alto.', price: 6300, category: 'Cafés', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 7 },
@@ -246,41 +246,41 @@ const PRODUCTS: Product[] = [
   { id: 204, name: 'Sándwich de Jamón y Queso', venue: 'La Cantina', description: 'Sándwich frío listo para llevar.', price: 2600, category: 'Sándwiches', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
   { id: 205, name: 'Coca Cola Lata', venue: 'La Cantina', description: 'Lata individual helada de Coca Cola.', price: 1600, category: 'Bebidas', image: '🥤', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 206, name: 'Bon o Bon', venue: 'La Cantina', description: 'Bombón de chocolate relleno con crema de maní.', price: 900, category: 'Dulces', image: '🍫', imageUrl: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1, isOutOfStock: true },
-  { id: 301, name: 'Café 12 oz', venue: 'Rústica', description: 'Elegí americano, latte, mocca o cortado.', price: 6500, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 5 },
-  { id: 302, name: 'Café 16 oz', venue: 'Rústica', description: 'Elegí americano, latte, mocca o cortado.', price: 7000, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
-  { id: 303, name: 'Latte o Flat', venue: 'Rústica', description: 'Café con leche en su versión latte o flat.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1494314671902-399b18174975?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
-  { id: 304, name: 'Submarino 16 oz', venue: 'Rústica', description: 'Bebida caliente clásica tamaño grande.', price: 7000, category: 'Cafetería', image: '🍫', imageUrl: 'https://images.unsplash.com/photo-1517578239113-b03992dcdd25?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 5 },
-  { id: 305, name: 'Latte Saborizado', venue: 'Rústica', description: 'Elegí vainilla o almendras.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
-  { id: 306, name: 'Caramel Latte', venue: 'Rústica', description: 'Latte con un toque dulce de caramelo.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
-  { id: 307, name: 'Kinder Latte', venue: 'Rústica', description: 'Cafecito con sabor Kinder, blanco o negro.', price: 8600, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 7 },
-  { id: 308, name: 'Latte Choco-avellanas', venue: 'Rústica', description: 'Latte con sabor a chocolate y avellanas.', price: 8300, category: 'Cafetería', image: '☕', imageUrl: 'https://images.unsplash.com/photo-1498804103079-a6351b050096?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
+  { id: 301, name: 'Café 12 oz', venue: 'Rústica', description: 'Elegí americano, latte, mocca o cortado.', price: 6500, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', waitTimeMinutes: 5 },
+  { id: 302, name: 'Café 16 oz', venue: 'Rústica', description: 'Elegí americano, latte, mocca o cortado.', price: 7000, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-16oz.webp', waitTimeMinutes: 6 },
+  { id: 303, name: 'Latte o Flat', venue: 'Rústica', description: 'Café con leche en su versión latte o flat.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-latte.webp', waitTimeMinutes: 6 },
+  { id: 304, name: 'Submarino 16 oz', venue: 'Rústica', description: 'Bebida caliente clásica tamaño grande.', price: 7000, category: 'Cafetería', image: '🍫', imageUrl: '/assets/Rustica/cafeteria/submarino-16oz.webp', waitTimeMinutes: 5 },
+  { id: 305, name: 'Latte Saborizado', venue: 'Rústica', description: 'Elegí vainilla o almendras.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-latte.webp', waitTimeMinutes: 6 },
+  { id: 306, name: 'Caramel Latte', venue: 'Rústica', description: 'Latte con un toque dulce de caramelo.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-latte.webp', waitTimeMinutes: 6 },
+  { id: 307, name: 'Kinder Latte', venue: 'Rústica', description: 'Cafecito con sabor Kinder, blanco o negro.', price: 8600, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-latte.webp', waitTimeMinutes: 7 },
+  { id: 308, name: 'Latte Choco-avellanas', venue: 'Rústica', description: 'Latte con sabor a chocolate y avellanas.', price: 8300, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-latte.webp', waitTimeMinutes: 6 },
   { id: 309, name: 'Té', venue: 'Rústica', description: 'Con o sin leche.', price: 3900, category: 'Cafetería', image: '🍵', imageUrl: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 3 },
-  { id: 310, name: 'Medialuna XL', venue: 'Rústica', description: 'Medialuna grande, ideal para acompañar el café.', price: 2000, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 311, name: 'Chipa', venue: 'Rústica', description: 'Chipa de queso recién horneado.', price: 3400, category: 'Panadería', image: '🧀', imageUrl: 'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 3 },
-  { id: 312, name: 'Scon de Queso', venue: 'Rústica', description: 'Scon salado con queso.', price: 4500, category: 'Panadería', image: '🧀', imageUrl: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 3 },
-  { id: 313, name: 'Palito de Queso', venue: 'Rústica', description: 'Palito crocante con queso.', price: 1450, category: 'Panadería', image: '🧀', imageUrl: 'https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 314, name: 'Pan de Chocolate', venue: 'Rústica', description: 'Pieza dulce de panadería con chocolate.', price: 3500, category: 'Panadería', image: '🍫', imageUrl: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
+  { id: 310, name: 'Medialuna XL', venue: 'Rústica', description: 'Medialuna grande, ideal para acompañar el café.', price: 2000, category: 'Panadería', image: '🥐', imageUrl: '/assets/Rustica/panaderia/medialuna-xl.webp', waitTimeMinutes: 2 },
+  { id: 311, name: 'Chipa', venue: 'Rústica', description: 'Chipa de queso recién horneado.', price: 3400, category: 'Panadería', image: '🧀', imageUrl: '/assets/Rustica/panaderia/chipa.webp', waitTimeMinutes: 3 },
+  { id: 312, name: 'Scon de Queso', venue: 'Rústica', description: 'Scon salado con queso.', price: 4500, category: 'Panadería', image: '🧀', imageUrl: '/assets/Cantina/panaderia/scon%20queso%20grande.jpeg', waitTimeMinutes: 3 },
+  { id: 313, name: 'Palito de Queso', venue: 'Rústica', description: 'Palito crocante con queso.', price: 1450, category: 'Panadería', image: '🧀', imageUrl: '/assets/Rustica/panaderia/palito-de-queso.webp', waitTimeMinutes: 2 },
+  { id: 314, name: 'Pan de Chocolate', venue: 'Rústica', description: 'Pieza dulce de panadería con chocolate.', price: 3500, category: 'Panadería', image: '🍫', imageUrl: '/assets/Rustica/panaderia/pan-de-chocolate.webp', waitTimeMinutes: 2 },
   { id: 315, name: 'Croissant', venue: 'Rústica', description: 'Croissant clásico de manteca.', price: 3200, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1623334044303-241021148842?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 316, name: 'Saladito', venue: 'Rústica', description: 'Pieza salada de panadería.', price: 3590, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 317, name: 'Palmera', venue: 'Rústica', description: 'Clásica palmera crocante.', price: 3040, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 318, name: 'Danesas', venue: 'Rústica', description: 'Pieza dulce tipo danesa.', price: 4800, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 319, name: 'Roll', venue: 'Rústica', description: 'Roll dulce de panadería.', price: 4650, category: 'Panadería', image: '🍥', imageUrl: 'https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 320, name: 'Croissant Jamón y Queso', venue: 'Rústica', description: 'Croissant relleno de jamón y queso.', price: 7090, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1623334044303-241021148842?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
+  { id: 316, name: 'Saladito', venue: 'Rústica', description: 'Pieza salada de panadería.', price: 3590, category: 'Panadería', image: '🥐', imageUrl: '/assets/Rustica/panaderia/saladito.webp', waitTimeMinutes: 2 },
+  { id: 317, name: 'Palmera', venue: 'Rústica', description: 'Clásica palmera crocante.', price: 3040, category: 'Panadería', image: '🥐', imageUrl: '/assets/Rustica/panaderia/palmera.webp', waitTimeMinutes: 2 },
+  { id: 318, name: 'Danesas', venue: 'Rústica', description: 'Pieza dulce tipo danesa.', price: 4800, category: 'Panadería', image: '🥐', imageUrl: '/assets/Rustica/panaderia/danesas.webp', waitTimeMinutes: 2 },
+  { id: 319, name: 'Roll', venue: 'Rústica', description: 'Roll dulce de panadería.', price: 4650, category: 'Panadería', image: '🍥', imageUrl: '/assets/Rustica/panaderia/roll.webp', waitTimeMinutes: 2 },
+  { id: 320, name: 'Croissant Jamón y Queso', venue: 'Rústica', description: 'Croissant relleno de jamón y queso.', price: 7090, category: 'Panadería', image: '🥐', imageUrl: '/assets/Rustica/panaderia/croissant-jamon-y-queso.webp', waitTimeMinutes: 4 },
   { id: 321, name: 'Tostado de Jamón y Queso', venue: 'Rústica', description: 'Panini o pan árabe con jamón y queso.', price: 6845, category: 'Panadería', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 5 },
-  { id: 322, name: 'Medialuna XL de Jamón y Queso', venue: 'Rústica', description: 'Medialuna XL rellena de jamón y queso.', price: 5600, category: 'Panadería', image: '🥐', imageUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
-  { id: 323, name: 'Cuadrado Dulce', venue: 'Rústica', description: 'Brownie, limón o cinnamon fudge.', price: 4850, category: 'Pastelería', image: '🍰', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
+  { id: 322, name: 'Medialuna XL de Jamón y Queso', venue: 'Rústica', description: 'Medialuna XL rellena de jamón y queso.', price: 5600, category: 'Panadería', image: '🥐', imageUrl: '/assets/Rustica/panaderia/medialuna-xl.webp', waitTimeMinutes: 4 },
+  { id: 323, name: 'Cuadrado Dulce', venue: 'Rústica', description: 'Brownie, limón o cinnamon fudge.', price: 4850, category: 'Pastelería', image: '🍰', imageUrl: '/assets/Rustica/pasteleria/cuadrado-dulce.webp', waitTimeMinutes: 2 },
   { id: 324, name: 'Cuadrado de Torta', venue: 'Rústica', description: 'Brownie cheesecake o coco con dulce de leche.', price: 5050, category: 'Pastelería', image: '🍰', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 325, name: 'Alfajores', venue: 'Rústica', description: 'Alfajores de varios sabores para elegir.', price: 4650, category: 'Pastelería', image: '🍫', imageUrl: 'https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 326, name: 'Conitos', venue: 'Rústica', description: 'Conitos dulces para acompañar.', price: 2600, category: 'Pastelería', image: '🍫', imageUrl: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 327, name: 'Paquete de Pepas', venue: 'Rústica', description: 'Paquete de pepas dulces.', price: 5300, category: 'Pastelería', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 325, name: 'Alfajores', venue: 'Rústica', description: 'Alfajores de varios sabores para elegir.', price: 4650, category: 'Pastelería', image: '🍫', imageUrl: '/assets/Rustica/pasteleria/alfajores.webp', waitTimeMinutes: 1 },
+  { id: 326, name: 'Conitos', venue: 'Rústica', description: 'Conitos dulces para acompañar.', price: 2600, category: 'Pastelería', image: '🍫', imageUrl: '/assets/Rustica/pasteleria/conitos.webp', waitTimeMinutes: 1 },
+  { id: 327, name: 'Paquete de Pepas', venue: 'Rústica', description: 'Paquete de pepas dulces.', price: 5300, category: 'Pastelería', image: '🍪', imageUrl: '/assets/Rustica/pasteleria/paquete-de-pepas.webp', waitTimeMinutes: 1 },
   { id: 328, name: 'Producto sin TACC', venue: 'Rústica', description: 'Opciones sin TACC como cuadrados y alfajores.', price: 5000, category: 'Pastelería', image: '🍰', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 329, name: 'Porción de Budín', venue: 'Rústica', description: 'De banana o zanahoria.', price: 4650, category: 'Pastelería', image: '🍰', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
+  { id: 329, name: 'Porción de Budín', venue: 'Rústica', description: 'De banana o zanahoria.', price: 4650, category: 'Pastelería', image: '🍰', imageUrl: '/assets/Rustica/pasteleria/porcion-de-budin.webp', waitTimeMinutes: 2 },
   { id: 330, name: 'Porción de Torta', venue: 'Rústica', description: 'Porción individual de torta.', price: 9000, category: 'Pastelería', image: '🍰', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 331, name: 'Crumble Cookies', venue: 'Rústica', description: 'Cookies estilo crumble.', price: 4300, category: 'Pastelería', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 332, name: 'Crumble Cookie con Topping', venue: 'Rústica', description: 'Cookie crumble con topping.', price: 5500, category: 'Pastelería', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 333, name: 'Cookie Decorada', venue: 'Rústica', description: 'Cookie decorada individual.', price: 4650, category: 'Pastelería', image: '🍪', imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 331, name: 'Crumble Cookies', venue: 'Rústica', description: 'Cookies estilo crumble.', price: 4300, category: 'Pastelería', image: '🍪', imageUrl: '/assets/Rustica/pasteleria/crumble-cookies.avif', waitTimeMinutes: 1 },
+  { id: 332, name: 'Crumble Cookie con Topping', venue: 'Rústica', description: 'Cookie crumble con topping.', price: 5500, category: 'Pastelería', image: '🍪', imageUrl: '/assets/Rustica/pasteleria/crumble-cookie-con-topping.webp', waitTimeMinutes: 1 },
+  { id: 333, name: 'Cookie Decorada', venue: 'Rústica', description: 'Cookie decorada individual.', price: 4650, category: 'Pastelería', image: '🍪', imageUrl: '/assets/Rustica/pasteleria/cookie-decorada.webp', waitTimeMinutes: 1 },
   { id: 334, name: 'Muffins', venue: 'Rústica', description: 'Muffins dulces individuales.', price: 4700, category: 'Pastelería', image: '🧁', imageUrl: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 2 },
-  { id: 335, name: 'Barra Proteica Vegana', venue: 'Rústica', description: 'Barra proteica vegana Wiki.', price: 4280, category: 'Pastelería', image: '🥜', imageUrl: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
+  { id: 335, name: 'Barra Proteica Vegana', venue: 'Rústica', description: 'Barra proteica vegana Wiki.', price: 4280, category: 'Pastelería', image: '🥜', imageUrl: '/assets/Rustica/pasteleria/barra-proteica-vegana.webp', waitTimeMinutes: 1 },
   { id: 336, name: 'Jugos de Frutas PuraFrutta', venue: 'Rústica', description: 'Jugo frutal listo para llevar.', price: 2000, category: 'Bebidas', image: '🧃', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 337, name: 'Jugo de Frutas 100% Natural 500 cc', venue: 'Rústica', description: 'Jugo natural en presentación de 500 cc.', price: 7050, category: 'Bebidas', image: '🧃', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 338, name: 'Jugo de Frutas 100% Natural 300 cc', venue: 'Rústica', description: 'Jugo natural en presentación de 300 cc.', price: 5000, category: 'Bebidas', image: '🧃', imageUrl: 'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
@@ -290,8 +290,8 @@ const PRODUCTS: Product[] = [
   { id: 342, name: 'Tazón de Cerámica', venue: 'Rústica', description: 'Tazón reutilizable de cerámica.', price: 17500, category: 'Otros', image: '🏺', imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 343, name: 'Vaso Impreso Rusti', venue: 'Rústica', description: 'Vaso con diseño impreso de Rusti.', price: 5800, category: 'Otros', image: '🥤', imageUrl: 'https://images.unsplash.com/photo-1514228742587-6b1558fcf93a?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 344, name: 'Promo del Día', venue: 'Rústica', description: 'Consultá por la opción disponible de hoy.', price: 8900, category: 'Promos', image: '✨', imageUrl: 'https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
-  { id: 345, name: 'Promo Pastelería', venue: 'Rústica', description: 'Cuadrado más café 12 oz.', price: 10500, category: 'Promos', image: '🍰', imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 5 },
-  { id: 346, name: 'Promo Tostado', venue: 'Rústica', description: 'Tostado de pan árabe más café 12 oz.', price: 12200, category: 'Promos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
+  { id: 345, name: 'Promo Pastelería', venue: 'Rústica', description: 'Cuadrado más café 12 oz.', price: 10500, category: 'Promos', image: '🍰', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', waitTimeMinutes: 5 },
+  { id: 346, name: 'Promo Tostado', venue: 'Rústica', description: 'Tostado de pan árabe más café 12 oz.', price: 12200, category: 'Promos', image: '🥪', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', waitTimeMinutes: 6 },
   { id: 347, name: 'Ciabatta Caesar', venue: 'Rústica', description: 'Sándwich ciabatta estilo caesar.', price: 9750, category: 'Almuerzos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 7 },
   { id: 348, name: 'Grillado de Lomito y Cheddar', venue: 'Rústica', description: 'Sándwich grillado con lomito y cheddar.', price: 8950, category: 'Almuerzos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 7 },
   { id: 349, name: 'Fosforito Lomito y Queso', venue: 'Rústica', description: 'Fosforito relleno de lomito y queso.', price: 6700, category: 'Almuerzos', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1608039755401-742074f0548d?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 6 },
@@ -574,6 +574,8 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
   const [selectedVenueLocations, setSelectedVenueLocations] = useState<string | null>(null);
   const [featuredShuffleTick, setFeaturedShuffleTick] = useState(0);
   const [selectedFlavorQuantities, setSelectedFlavorQuantities] = useState<Record<string, number>>({});
+  const productListScrollPositionRef = useRef(0);
+  const shouldRestoreProductListScrollRef = useRef(false);
   const selectedFlavors = Object.entries(selectedFlavorQuantities)
     .filter(([, quantity]) => quantity > 0)
     .map(([flavor]) => flavor);
@@ -730,6 +732,30 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
   const visibleAvailableProducts = availableProducts.slice(0, visibleProductsCount);
   const hasMoreProducts = availableProducts.length > visibleAvailableProducts.length;
 
+  const openProductDetail = (product: Product) => {
+    productListScrollPositionRef.current = window.scrollY;
+    setSelectedProduct(product);
+  };
+
+  const closeProductDetail = () => {
+    shouldRestoreProductListScrollRef.current = true;
+    setSelectedProduct(null);
+  };
+
+  useEffect(() => {
+    if (selectedProduct || !shouldRestoreProductListScrollRef.current) {
+      return;
+    }
+
+    shouldRestoreProductListScrollRef.current = false;
+    window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: productListScrollPositionRef.current,
+        behavior: 'auto',
+      });
+    });
+  }, [selectedProduct]);
+
   useEffect(() => {
     setSelectedFlavorQuantities({});
   }, [selectedProduct]);
@@ -806,7 +832,7 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
   const renderProductCard = (product: Product) => (
     <div
       key={product.id}
-      onClick={() => setSelectedProduct(product)}
+      onClick={() => openProductDetail(product)}
       className={`relative flex items-center gap-3 rounded-xl border-2 p-3 shadow-md transition-colors cursor-pointer ${
         product.isOutOfStock
           ? 'bg-gray-100 border-gray-200 opacity-80'
@@ -867,7 +893,7 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
           event.stopPropagation();
           if (!product.isOutOfStock) {
             if (getProductSelectionOptions(product).length) {
-              setSelectedProduct(product);
+              openProductDetail(product);
               return;
             }
 
@@ -904,20 +930,21 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
 
     return (
       <div className="min-h-screen bg-amber-50 flex flex-col">
+        <button
+          type="button"
+          onClick={closeProductDetail}
+          className="fixed left-4 top-4 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-gray-800 shadow-lg ring-1 ring-black/5 backdrop-blur transition-colors hover:bg-white"
+          aria-label="Volver"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+
         <div className="relative h-80 bg-amber-100">
           <img
             src={selectedProduct.imageUrl}
             alt={formatMenuText(selectedProduct.name)}
             className={`h-full w-full object-cover ${selectedProduct.isOutOfStock ? 'grayscale' : ''}`}
           />
-          <button
-            type="button"
-            onClick={() => setSelectedProduct(null)}
-            className="absolute top-4 left-4 h-10 w-10 rounded-full bg-white/90 text-gray-800 flex items-center justify-center shadow-md"
-            aria-label="Volver"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 pb-32 space-y-4">
@@ -1033,7 +1060,7 @@ export function Home({ userName, onAddToCart, searchQuery, onSearchChange, onLog
 	              onClick={() => {
 	                if (!selectedProduct.isOutOfStock && selectedProductSelectionsForCart.length) {
 	                  selectedProductSelectionsForCart.forEach((productSelection) => onAddToCart(productSelection));
-	                  setSelectedProduct(null);
+	                  closeProductDetail();
 	                }
 	              }}
 	              disabled={selectedProduct.isOutOfStock || !selectedProductSelectionsForCart.length}
