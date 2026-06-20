@@ -468,8 +468,13 @@ const formatPrice = (price: number) => `$${price.toLocaleString('es-AR')}`;
 const formatUserName = (name: string) =>
   name ? `${name.charAt(0).toUpperCase()}${name.slice(1)}` : name;
 
-const getSeededFeaturedProducts = (products: Product[], venue: string, tick: number) => {
-  if (products.length <= 3) {
+const getSeededFeaturedProducts = (
+  products: Product[],
+  venue: string,
+  tick: number,
+  count = 3,
+) => {
+  if (products.length <= count) {
     return products;
   }
 
@@ -482,7 +487,7 @@ const getSeededFeaturedProducts = (products: Product[], venue: string, tick: num
       const secondScore = (secondProduct.id * 31 + baseSeed) % 1000;
       return firstScore - secondScore;
     })
-    .slice(0, 3);
+    .slice(0, count);
 };
 
 const BRAND_MATCHERS: Array<{ needle: string; brand: string }> = [
@@ -755,10 +760,14 @@ export function Home({
   const hasMoreProducts = availableProducts.length > visibleAvailableProducts.length;
   const lastOrderItemCount = lastOrderItems.reduce((total, item) => total + item.quantity, 0);
   const lastOrderTotal = lastOrderItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const quickProducts = PRODUCTS
-    .filter((product) => !product.isOutOfStock && product.waitTimeMinutes < 5)
-    .sort((firstProduct, secondProduct) => firstProduct.waitTimeMinutes - secondProduct.waitTimeMinutes)
-    .slice(0, 4);
+  const quickProducts = getSeededFeaturedProducts(
+    PRODUCTS
+      .filter((product) => !product.isOutOfStock && product.waitTimeMinutes < 5)
+      .sort((firstProduct, secondProduct) => firstProduct.waitTimeMinutes - secondProduct.waitTimeMinutes),
+    'quick-products',
+    featuredShuffleTick,
+    4,
+  );
 
   const openProductDetail = (product: Product) => {
     productListScrollPositionRef.current = window.scrollY;
@@ -1432,14 +1441,22 @@ export function Home({
 
         {!selectedVenueLocations && !selectedVenue && quickProducts.length > 0 && (
           <div className="space-y-3">
-            <div className="flex items-center gap-3 pt-1">
-              <div className="flex min-w-0 items-center gap-2">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
-                  <Clock className="h-4 w-4" />
-                </span>
-                <h2 className="truncate text-lg font-extrabold text-gray-900">Listo en menos de 5 min</h2>
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center gap-3">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
+                    <Clock className="h-4 w-4" />
+                  </span>
+                  <h2 className="truncate text-lg font-extrabold text-gray-900">Listo en menos de 5 min</h2>
+                </div>
+                <div className="h-px flex-1 bg-amber-200" />
               </div>
-              <div className="h-px flex-1 bg-amber-200" />
+              <div className="h-2 overflow-hidden rounded-full bg-amber-100 shadow-inner">
+                <div
+                  key={featuredShuffleTick}
+                  className="quick-products-progress-fill h-full rounded-full"
+                />
+              </div>
             </div>
 
             {quickProducts.map((product) => renderProductCard(product))}
