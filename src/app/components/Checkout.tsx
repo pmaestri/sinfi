@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ArrowLeft, Calendar, CreditCard, LockKeyhole, Smartphone, User } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { AlertCircle, ArrowLeft, Calendar, CreditCard, LockKeyhole, Smartphone, User } from 'lucide-react';
 
 interface CheckoutProps {
   total: number;
@@ -16,6 +16,8 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
   const [notes, setNotes] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isRedirectingToMercadoPago, setIsRedirectingToMercadoPago] = useState(false);
+  const [hasTriedToConfirm, setHasTriedToConfirm] = useState(false);
+  const cardErrorRef = useRef<HTMLDivElement | null>(null);
 
   const formatCardNumber = (value: string) =>
     value
@@ -32,18 +34,32 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
     return `${digits.slice(0, 2)}/${digits.slice(2)}`;
   };
 
+  const isCardNumberValid = cardNumber.replace(/\D/g, '').length === 16;
+  const isCardNameValid = cardName.trim().length >= 3;
+  const isCardExpiryValid = cardExpiry.length === 5;
+  const isCardCvvValid = cardCvv.length >= 3;
   const isCardFormValid =
     paymentMethod !== 'card' ||
-    (
-      cardNumber.replace(/\D/g, '').length === 16 &&
-      cardName.trim().length >= 3 &&
-      cardExpiry.length === 5 &&
-      cardCvv.length >= 3
-    );
+    (isCardNumberValid && isCardNameValid && isCardExpiryValid && isCardCvvValid);
+  const shouldShowCardErrors = paymentMethod === 'card' && hasTriedToConfirm && !isCardFormValid;
+  const getInputClassName = (isValid: boolean) =>
+    `w-full rounded-lg border-2 py-3 font-semibold focus:outline-none focus:ring-2 ${
+      hasTriedToConfirm && paymentMethod === 'card' && !isValid
+        ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-200'
+        : 'border-gray-300 focus:border-yellow-700 focus:ring-yellow-700'
+    }`;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setHasTriedToConfirm(true);
+
     if (!isCardFormValid) {
+      window.requestAnimationFrame(() => {
+        cardErrorRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      });
       return;
     }
 
@@ -93,7 +109,7 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6 space-y-6 max-w-2xl mx-auto">
+      <form onSubmit={handleSubmit} className="p-6 space-y-6 max-w-2xl mx-auto" noValidate>
         <div className="bg-white rounded-xl p-6 shadow-md border-2 border-amber-100">
           <h2 className="font-bold text-gray-900 mb-4 text-lg">Método de Pago</h2>
           <div className="space-y-3">
@@ -143,7 +159,18 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
           </div>
 
           {paymentMethod === 'card' && (
-            <div className="mt-5 rounded-xl border-2 border-amber-100 bg-amber-50/70 p-4">
+            <div ref={cardErrorRef} className="mt-5 rounded-xl border-2 border-amber-100 bg-amber-50/70 p-4">
+              {shouldShowCardErrors && (
+                <div className="mb-4 flex items-start gap-3 rounded-xl border-2 border-red-200 bg-red-50 px-4 py-3 text-red-800">
+                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                  <div>
+                    <p className="font-bold">Faltan datos de la tarjeta</p>
+                    <p className="mt-1 text-sm font-medium">
+                      Completá número, nombre, vencimiento y CVV para confirmar el pedido.
+                    </p>
+                  </div>
+                </div>
+              )}
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-gray-700">Número de tarjeta</label>
@@ -155,10 +182,13 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
                       value={cardNumber}
                       onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                       placeholder="1234 5678 9012 3456"
-                      className="w-full rounded-lg border-2 border-gray-300 py-3 pl-10 pr-4 font-semibold tracking-wide focus:border-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-700"
-                      required={paymentMethod === 'card'}
+                      className={`${getInputClassName(isCardNumberValid)} pl-10 pr-4 tracking-wide`}
+                      aria-invalid={hasTriedToConfirm && !isCardNumberValid}
                     />
                   </div>
+                  {hasTriedToConfirm && !isCardNumberValid && (
+                    <p className="text-xs font-bold text-red-600">Ingresá los 16 números de la tarjeta.</p>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -170,10 +200,13 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
                       value={cardName}
                       onChange={(e) => setCardName(e.target.value.toUpperCase())}
                       placeholder="NOMBRE APELLIDO"
-                      className="w-full rounded-lg border-2 border-gray-300 py-3 pl-10 pr-4 font-semibold focus:border-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-700"
-                      required={paymentMethod === 'card'}
+                      className={`${getInputClassName(isCardNameValid)} pl-10 pr-4`}
+                      aria-invalid={hasTriedToConfirm && !isCardNameValid}
                     />
                   </div>
+                  {hasTriedToConfirm && !isCardNameValid && (
+                    <p className="text-xs font-bold text-red-600">Ingresá el nombre como figura en la tarjeta.</p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -187,10 +220,13 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(formatExpiry(e.target.value))}
                         placeholder="MM/AA"
-                        className="w-full rounded-lg border-2 border-gray-300 py-3 pl-10 pr-3 font-semibold focus:border-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-700"
-                        required={paymentMethod === 'card'}
+                        className={`${getInputClassName(isCardExpiryValid)} pl-10 pr-3`}
+                        aria-invalid={hasTriedToConfirm && !isCardExpiryValid}
                       />
                     </div>
+                    {hasTriedToConfirm && !isCardExpiryValid && (
+                      <p className="text-xs font-bold text-red-600">Usá el formato MM/AA.</p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -203,10 +239,13 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
                         value={cardCvv}
                         onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
                         placeholder="123"
-                        className="w-full rounded-lg border-2 border-gray-300 py-3 pl-10 pr-3 font-semibold focus:border-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-700"
-                        required={paymentMethod === 'card'}
+                        className={`${getInputClassName(isCardCvvValid)} pl-10 pr-3`}
+                        aria-invalid={hasTriedToConfirm && !isCardCvvValid}
                       />
                     </div>
+                    {hasTriedToConfirm && !isCardCvvValid && (
+                      <p className="text-xs font-bold text-red-600">Ingresá el código de seguridad.</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -242,7 +281,7 @@ export function Checkout({ total, onBack, onConfirm }: CheckoutProps) {
 
         <button
           type="submit"
-          disabled={isProcessing || !isCardFormValid}
+          disabled={isProcessing}
           className="w-full bg-yellow-800 text-white py-4 rounded-xl font-bold hover:bg-yellow-900 transition-colors disabled:bg-yellow-600 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-md"
         >
           {isProcessing ? (

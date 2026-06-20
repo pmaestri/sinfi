@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Toaster, toast } from 'sonner';
 import {
   Home as HomeIcon,
@@ -15,10 +15,11 @@ import { Cart } from './components/Cart';
 import { Checkout } from './components/Checkout';
 import { OrderTracking } from './components/OrderTracking';
 import { Feedback } from './components/Feedback';
+import { Faq } from './components/Faq';
 import { Account } from './components/Account';
 import { formatMenuText } from './utils/menuText';
 
-type Screen = 'onboarding' | 'login' | 'home' | 'cart' | 'checkout' | 'tracking' | 'feedback' | 'account';
+type Screen = 'onboarding' | 'login' | 'home' | 'cart' | 'checkout' | 'tracking' | 'feedback' | 'faq' | 'account';
 
 interface Product {
   id: number;
@@ -42,15 +43,95 @@ interface CartItem extends Product {
   quantity: number;
 }
 
+const CART_STORAGE_PREFIX = 'la-sede-cart';
+const LAST_ORDER_STORAGE_PREFIX = 'la-sede-last-order';
+const ACTIVE_ACCOUNT_STORAGE_KEY = 'la-sede-active-account';
+
+const getAccountStorageKey = (prefix: string, accountName: string) =>
+  `${prefix}:${accountName.trim().toLowerCase()}`;
+
+const readStoredItems = (prefix: string, accountName: string): CartItem[] => {
+  if (!accountName.trim()) {
+    return [];
+  }
+
+  try {
+    const storedValue = localStorage.getItem(getAccountStorageKey(prefix, accountName));
+    if (!storedValue) {
+      return [];
+    }
+
+    const parsedValue: unknown = JSON.parse(storedValue);
+    return Array.isArray(parsedValue) ? parsedValue as CartItem[] : [];
+  } catch {
+    return [];
+  }
+};
+
+const readStoredAccountName = () => {
+  try {
+    return localStorage.getItem(ACTIVE_ACCOUNT_STORAGE_KEY) ?? '';
+  } catch {
+    return '';
+  }
+};
+
+const writeStoredItems = (prefix: string, accountName: string, items: CartItem[]) => {
+  if (!accountName.trim()) {
+    return;
+  }
+
+  try {
+    localStorage.setItem(
+      getAccountStorageKey(prefix, accountName),
+      JSON.stringify(items),
+    );
+  } catch {
+    // If storage is unavailable, keep the in-memory cart working.
+  }
+};
+
+const writeStoredAccountName = (accountName: string) => {
+  try {
+    if (!accountName.trim()) {
+      localStorage.removeItem(ACTIVE_ACCOUNT_STORAGE_KEY);
+      return;
+    }
+
+    localStorage.setItem(ACTIVE_ACCOUNT_STORAGE_KEY, accountName.trim());
+  } catch {
+    // If storage is unavailable, keep the in-memory session working.
+  }
+};
+
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState<Screen>('onboarding');
-  const [userName, setUserName] = useState('');
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [currentScreen, setCurrentScreen] = useState<Screen>(() =>
+    readStoredAccountName() ? 'home' : 'onboarding',
+  );
+  const [userName, setUserName] = useState(() => readStoredAccountName());
+  const [cart, setCart] = useState<CartItem[]>(() =>
+    readStoredItems(CART_STORAGE_PREFIX, readStoredAccountName()),
+  );
   const [orderItems, setOrderItems] = useState<CartItem[]>([]);
+  const [lastOrderItems, setLastOrderItems] = useState<CartItem[]>(() =>
+    readStoredItems(LAST_ORDER_STORAGE_PREFIX, readStoredAccountName()),
+  );
   const [orderNumber, setOrderNumber] = useState('');
   const [orderTotal, setOrderTotal] = useState(0);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const cartButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const loadUserSession = (name: string) => {
+    const nextUserName = name.trim() || 'Usuario';
+    writeStoredAccountName(nextUserName);
+    setUserName(nextUserName);
+    setCart(readStoredItems(CART_STORAGE_PREFIX, nextUserName));
+    setLastOrderItems(readStoredItems(LAST_ORDER_STORAGE_PREFIX, nextUserName));
+    setSearchQuery('');
+    setIsSearchOpen(false);
+    setCurrentScreen('home');
+  };
 
   const handleAddToCart = (product: Product) => {
     setCart((prevCart) => {
@@ -118,18 +199,73 @@ export default function App() {
     );
   };
 
+  const handleClearCart = () => {
+    setCart([]);
+    toast.error('Carrito vaciado', {
+      duration: 2000,
+    });
+  };
+
   const handleCheckout = () => {
     const randomOrderNumber = Math.floor(100000 + Math.random() * 900000).toString();
     setOrderNumber(randomOrderNumber);
     setOrderTotal(cartTotal);
     setOrderItems(cart);
+    setLastOrderItems(cart);
+    writeStoredItems(LAST_ORDER_STORAGE_PREFIX, userName, cart);
+    writeStoredItems(CART_STORAGE_PREFIX, userName, []);
     setCurrentScreen('tracking');
     setCart([]);
+  };
+
+  const handleRepeatLastOrder = () => {
+    if (!lastOrderItems.length) {
+      return;
+    }
+
+    setCart((prevCart) => {
+      const nextCart = [...prevCart];
+
+      for (const lastOrderItem of lastOrderItems) {
+        const itemKey = lastOrderItem.cartKey ?? String(lastOrderItem.id);
+        const existingItemIndex = nextCart.findIndex(
+          (item) => (item.cartKey ?? String(item.id)) === itemKey,
+        );
+
+        if (existingItemIndex >= 0) {
+          nextCart[existingItemIndex] = {
+            ...nextCart[existingItemIndex],
+            quantity: nextCart[existingItemIndex].quantity + lastOrderItem.quantity,
+          };
+          continue;
+        }
+
+        nextCart.push({ ...lastOrderItem });
+      }
+
+      return nextCart;
+    });
+
+    toast.success('Último pedido agregado al carrito', {
+      description: `${lastOrderItems.reduce((total, item) => total + item.quantity, 0)} productos`,
+      duration: 2000,
+    });
+    setCurrentScreen('cart');
   };
 
   const handleNewOrder = () => {
     setOrderItems([]);
     setCurrentScreen('home');
+  };
+
+  const handleUpdateName = (name: string) => {
+    const nextUserName = name.trim();
+    if (!nextUserName) return;
+
+    writeStoredAccountName(nextUserName);
+    writeStoredItems(CART_STORAGE_PREFIX, nextUserName, cart);
+    writeStoredItems(LAST_ORDER_STORAGE_PREFIX, nextUserName, lastOrderItems);
+    setUserName(nextUserName);
   };
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -147,8 +283,15 @@ export default function App() {
     setCurrentScreen('account');
   };
   const handleLogout = () => {
+    if (userName) {
+      writeStoredItems(CART_STORAGE_PREFIX, userName, cart);
+      writeStoredItems(LAST_ORDER_STORAGE_PREFIX, userName, lastOrderItems);
+    }
+
+    writeStoredAccountName('');
     setUserName('');
     setCart([]);
+    setLastOrderItems([]);
     setSearchQuery('');
     setIsSearchOpen(false);
     setCurrentScreen('login');
@@ -170,6 +313,22 @@ export default function App() {
           : currentScreen === 'home'
             ? 0
             : -1;
+
+  useEffect(() => {
+    if (!userName) {
+      return;
+    }
+
+    writeStoredItems(CART_STORAGE_PREFIX, userName, cart);
+  }, [cart, userName]);
+
+  useEffect(() => {
+    if (!userName) {
+      return;
+    }
+
+    writeStoredItems(LAST_ORDER_STORAGE_PREFIX, userName, lastOrderItems);
+  }, [lastOrderItems, userName]);
 
   useEffect(() => {
     if (!isSearchOpen) {
@@ -195,19 +354,33 @@ export default function App() {
       )}
 
       {currentScreen === 'login' && (
-        <Login onLogin={(name) => {
-          setUserName(name);
-          setCurrentScreen('home');
-        }} onFeedback={() => setCurrentScreen('feedback')} />
+        <Login onLogin={loadUserSession} onFeedback={() => setCurrentScreen('feedback')} />
       )}
 
       {currentScreen === 'home' && (
         <Home
           userName={userName}
           onAddToCart={handleAddToCart}
+          lastOrderItems={lastOrderItems}
+          onRepeatLastOrder={handleRepeatLastOrder}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onLogout={handleLogout}
+          getCartTarget={() => {
+            const cartButtonRect = cartButtonRef.current?.getBoundingClientRect();
+
+            if (!cartButtonRect) {
+              return {
+                x: window.innerWidth / 2,
+                y: window.innerHeight - 34,
+              };
+            }
+
+            return {
+              x: cartButtonRect.left + cartButtonRect.width / 2,
+              y: cartButtonRect.top + cartButtonRect.height / 2,
+            };
+          }}
         />
       )}
 
@@ -218,6 +391,7 @@ export default function App() {
           onCheckout={() => setCurrentScreen('checkout')}
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
+          onClearCart={handleClearCart}
         />
       )}
 
@@ -239,7 +413,14 @@ export default function App() {
       )}
 
       {currentScreen === 'feedback' && (
-        <Feedback onBack={() => setCurrentScreen(userName ? 'home' : 'login')} />
+        <Feedback
+          onBack={() => setCurrentScreen(userName ? 'home' : 'login')}
+          onFaq={() => setCurrentScreen('faq')}
+        />
+      )}
+
+      {currentScreen === 'faq' && (
+        <Faq onBack={() => setCurrentScreen('feedback')} />
       )}
 
       {currentScreen === 'account' && (
@@ -247,7 +428,7 @@ export default function App() {
           userName={userName}
           onBack={() => setCurrentScreen('home')}
           onLogout={handleLogout}
-          onUpdateName={setUserName}
+          onUpdateName={handleUpdateName}
         />
       )}
 
@@ -287,6 +468,7 @@ export default function App() {
               <Search className="w-6 h-6" />
             </button>
             <button
+              ref={cartButtonRef}
               onClick={() => setCurrentScreen('cart')}
               className={`${navItemClass(['cart', 'checkout'].includes(currentScreen))} relative`}
               aria-label="Carrito"
