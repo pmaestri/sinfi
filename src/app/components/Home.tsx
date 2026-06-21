@@ -483,8 +483,10 @@ const getSeededFeaturedProducts = (
 
   return [...products]
     .sort((firstProduct, secondProduct) => {
-      const firstScore = (firstProduct.id * 31 + baseSeed) % 1000;
-      const secondScore = (secondProduct.id * 31 + baseSeed) % 1000;
+      const firstScore =
+        Math.sin((firstProduct.id + 1) * 12.9898 + baseSeed * 78.233) * 43758.5453;
+      const secondScore =
+        Math.sin((secondProduct.id + 1) * 12.9898 + baseSeed * 78.233) * 43758.5453;
       return firstScore - secondScore;
     })
     .slice(0, count);
@@ -1420,20 +1422,20 @@ export function Home({
           <button
             type="button"
             onClick={onRepeatLastOrder}
-            className="flex w-full items-center justify-between gap-4 rounded-2xl border-2 border-amber-200 bg-white px-4 py-3 text-left shadow-md transition-colors hover:border-yellow-700 hover:bg-amber-50 active:scale-[0.99]"
+            className="flex w-full items-center justify-between gap-3 rounded-xl border border-amber-200 bg-white px-3 py-2 text-left shadow-sm transition-colors hover:border-yellow-700 hover:bg-amber-50 active:scale-[0.99]"
           >
-            <span className="flex min-w-0 items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-yellow-800 text-white shadow-sm">
-                <RotateCcw className="h-4.5 w-4.5" />
+            <span className="flex min-w-0 items-center gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-yellow-800 text-white shadow-sm">
+                <RotateCcw className="h-4 w-4" />
               </span>
               <span className="min-w-0">
-                <span className="block text-sm font-extrabold text-gray-900">Repetir último pedido</span>
+                <span className="block text-xs font-extrabold text-gray-900">Repetir último pedido</span>
                 <span className="block truncate text-xs font-bold text-gray-500">
                   {lastOrderItemCount} {lastOrderItemCount === 1 ? 'producto' : 'productos'} · {formatPrice(lastOrderTotal)}
                 </span>
               </span>
             </span>
-            <span className="shrink-0 rounded-full bg-amber-100 px-3 py-1 text-xs font-extrabold text-yellow-900">
+            <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-extrabold text-yellow-900">
               Agregar
             </span>
           </button>
@@ -1441,22 +1443,14 @@ export function Home({
 
         {!selectedVenueLocations && !selectedVenue && quickProducts.length > 0 && (
           <div className="space-y-3">
-            <div className="space-y-2 pt-1">
-              <div className="flex items-center gap-3">
-                <div className="flex min-w-0 items-center gap-2">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
-                    <Clock className="h-4 w-4" />
-                  </span>
-                  <h2 className="truncate text-lg font-extrabold text-gray-900">Listo en menos de 5 min</h2>
-                </div>
-                <div className="h-px flex-1 bg-amber-200" />
+            <div className="flex items-center gap-3 pt-1">
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-700">
+                  <Clock className="h-4 w-4" />
+                </span>
+                <h2 className="truncate text-lg font-extrabold text-gray-900">Listo en menos de 5 min</h2>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-amber-100 shadow-inner">
-                <div
-                  key={featuredShuffleTick}
-                  className="quick-products-progress-fill h-full rounded-full"
-                />
-              </div>
+              <div className="h-px flex-1 bg-amber-200" />
             </div>
 
             {quickProducts.map((product) => renderProductCard(product))}
