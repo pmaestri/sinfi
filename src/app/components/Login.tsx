@@ -70,10 +70,10 @@ export function Login({ onLogin, onFeedback }: LoginProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <div className="bg-gradient-to-br from-emerald-500 to-sky-700 text-white p-6 text-center shadow-md relative">
+      <div className="bg-white text-gray-900 p-6 text-center shadow-md relative">
         <button
           onClick={onFeedback}
-          className="absolute right-6 top-6 bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors"
+          className="absolute right-6 top-6 bg-emerald-50 p-2 rounded-full text-emerald-700 hover:bg-emerald-100 transition-colors"
           aria-label="Dejar comentario"
         >
           <MessageSquare className="w-6 h-6" />

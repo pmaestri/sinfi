@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
-import { ArrowLeft, ChevronDown, ChevronUp, Clock, Croissant, LogOut, MapPin, Minus, Plus, RotateCcw, SlidersHorizontal, Tag, Trash2, X } from 'lucide-react';
+import { ArrowLeft, Bell, ChevronDown, ChevronUp, Clock, Croissant, LogOut, MapPin, Minus, Plus, RotateCcw, SlidersHorizontal, Tag, Trash2, X } from 'lucide-react';
+import { toast } from 'sonner';
 import starbucksLogo from '../../assets/starbucks-logo.png';
-import sinfiLogo from '../../../SinFi.png';
+import sinfiLogo from '../../assets/sinfi-logo-transparent.png';
 import { formatMenuText } from '../utils/menuText';
 
 const rusticaLogo = `data:image/svg+xml;utf8,${encodeURIComponent(`
@@ -96,7 +97,7 @@ interface CartFlight {
 }
 
 const PRODUCTS: Product[] = [
-  { id: 1, name: 'Agua con Gas / Agua Saborizada', venue: 'La Cantina', description: 'Elegí agua con gas o saborizada.', price: 2900, category: 'Bebidas', image: '💧', imageUrl: '/assets/beverages/agua-con-gas.png', waitTimeMinutes: 1, flavorOptions: ['Agua con Gas', 'Agua Saborizada'] },
+  { id: 1, name: 'Agua con Gas', venue: 'La Cantina', description: 'Agua con gas fría.', price: 2900, category: 'Bebidas', image: '💧', imageUrl: '/assets/beverages/agua-con-gas.png', waitTimeMinutes: 1 },
   { id: 2, name: 'Árabe / Pebete / Bagel de Jamón y Queso', venue: 'La Cantina', description: 'Elegí el tipo de pan antes de agregar el sándwich.', price: 10129, category: 'Sándwiches', image: '🥯', imageUrl: '/assets/Cantina/Sandwiches/pebeteJyQ.jpg', waitTimeMinutes: 7, flavorOptions: ['Árabe', 'Pebete', 'Bagel'] },
   { id: 3, name: 'Baguette Caprese', venue: 'La Cantina', description: 'Sándwich disponible en La Cantina.', price: 8296, category: 'Sándwiches', image: '🥖', imageUrl: '/assets/Cantina/Sandwiches/baguette%20Caprese.jpeg', waitTimeMinutes: 8 },
   { id: 4, name: 'Baguette de Jamón y Queso', venue: 'La Cantina', description: 'Sándwich disponible en La Cantina.', price: 8296, category: 'Sándwiches', image: '🥖', imageUrl: '/assets/Cantina/Sandwiches/baguette%20jamon%20y%20queso.jpeg', waitTimeMinutes: 8 },
@@ -131,7 +132,6 @@ const PRODUCTS: Product[] = [
   { id: 33, name: 'Alfajor Jorgito Simple', venue: 'La Cantina', description: 'Alfajor disponible en La Cantina.', price: 1455, category: 'Alfajores', image: '🍫', imageUrl: '/assets/Cantina/alfajores/jorgito.jpg', waitTimeMinutes: 1 },
   { id: 34, name: 'Alfajor Shot Simple', venue: 'La Cantina', description: 'Alfajor disponible en La Cantina.', price: 1477, category: 'Alfajores', image: '🍫', imageUrl: '/assets/Cantina/alfajores/shot-simple.png', waitTimeMinutes: 1 },
   { id: 35, name: 'Alfajor Terrabusi Simple', venue: 'La Cantina', description: 'Alfajor disponible en La Cantina.', price: 1447, category: 'Alfajores', image: '🍫', imageUrl: '/assets/Cantina/alfajores/terrabusi.jpeg', waitTimeMinutes: 1 },
-  { id: 37, name: 'Bonobon', venue: 'La Cantina', description: 'Golosina disponible en La Cantina.', price: 579, category: 'Golosinas', image: '🍫', imageUrl: '/assets/Cantina/golosinas/bonobon.png', waitTimeMinutes: 1 },
   { id: 38, name: 'Cadbury 29 g', venue: 'La Cantina', description: 'Chocolate disponible en La Cantina.', price: 3300, category: 'Chocolates', image: '🍫', imageUrl: '/assets/Cantina/chocolates/cadbury-29g.png', waitTimeMinutes: 1 },
   { id: 41, name: 'Halls', venue: 'La Cantina', description: 'Elegí el gusto antes de agregar el caramelo.', price: 1143, category: 'Caramelos', image: '🍬', imageUrl: '/assets/Cantina/caramelos/halls.png', waitTimeMinutes: 1, flavorOptions: ['Frutilla', 'Mentol', 'Menta', 'Fuerte', 'Sandía'] },
   { id: 43, name: 'Cereal Flow', venue: 'La Cantina', description: 'Barra o snack de cereal disponible en La Cantina.', price: 1477, category: 'Cereales', image: '🥣', imageUrl: '/assets/Cantina/cereales/cereal-flow.webp', waitTimeMinutes: 1 },
@@ -267,7 +267,7 @@ const PRODUCTS: Product[] = [
   { id: 203, name: 'Gomitas', venue: 'La Cantina', description: 'Bolsa de gomitas surtidas frutales.', price: 1200, category: 'Dulces', image: '🍬', imageUrl: 'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
   { id: 204, name: 'Sándwich de Jamón y Queso', venue: 'La Cantina', description: 'Sándwich frío listo para llevar.', price: 2600, category: 'Sándwiches', image: '🥪', imageUrl: 'https://images.unsplash.com/photo-1528736235302-52922df5c122?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 4 },
   { id: 205, name: 'Coca Cola Lata', venue: 'La Cantina', description: 'Lata individual helada de Coca Cola.', price: 1600, category: 'Bebidas', image: '🥤', imageUrl: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1 },
-  { id: 206, name: 'Bon o Bon', venue: 'La Cantina', description: 'Bombón de chocolate relleno con crema de maní.', price: 900, category: 'Dulces', image: '🍫', imageUrl: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&w=240&h=240&q=80', waitTimeMinutes: 1, isOutOfStock: true },
+  { id: 206, name: 'Bon o Bon', venue: 'La Cantina', description: 'Bombón de chocolate relleno con crema de maní.', price: 900, category: 'Dulces', image: '🍫', imageUrl: '/assets/Cantina/golosinas/bonobon.png', waitTimeMinutes: 1, isOutOfStock: true },
   { id: 301, name: 'Café 12 oz', venue: 'Rústica', description: 'Elegí americano, latte, mocca o cortado.', price: 6500, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-12oz.webp', waitTimeMinutes: 5, flavorOptions: ['Americano', 'Latte', 'Mocca', 'Cortado'] },
   { id: 302, name: 'Café 16 oz', venue: 'Rústica', description: 'Elegí americano, latte, mocca o cortado.', price: 7000, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-16oz.webp', waitTimeMinutes: 6, flavorOptions: ['Americano', 'Latte', 'Mocca', 'Cortado'] },
   { id: 303, name: 'Latte o Flat', venue: 'Rústica', description: 'Elegí latte o flat.', price: 7600, category: 'Cafetería', image: '☕', imageUrl: '/assets/Rustica/cafe/cafe-latte.webp', waitTimeMinutes: 6, flavorOptions: ['Latte', 'Flat'] },
@@ -331,13 +331,13 @@ const VENUE_LOCATIONS: Record<string, string[]> = {
   ],
   Starbucks: [
     'Lima 3, Piso 8',
-    'Chile, Patio al lado del edificio',
+    'Patio, al lado del edificio Chile',
   ],
 };
 
 const LIMITED_PICKUP_PRODUCT_IDS: Record<string, Set<number>> = {
   'Lima 2, Piso 10': new Set([
-    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 37, 38, 41, 43, 44, 45, 46, 47, 48, 49,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 38, 41, 43, 44, 45, 46, 47, 48, 49,
     50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
     69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 83, 85, 86, 87, 89, 90,
     91, 92, 93, 94, 95, 96, 97, 98, 99,
@@ -628,6 +628,9 @@ const getVenueBadge = (venue: string) => {
 const getProductImageUrls = (product: Product) =>
   product.imageUrls?.length ? product.imageUrls : [product.imageUrl];
 
+const getFilterDisplayText = (value: string) =>
+  value === 'Todas las categorías' || value === 'Todas las marcas' ? 'Todas' : value;
+
 export function Home({
   userName,
   onAddToCart,
@@ -662,10 +665,21 @@ export function Home({
   const selectedFlavors = Object.entries(selectedFlavorQuantities)
     .filter(([, quantity]) => quantity > 0)
     .map(([flavor]) => flavor);
-  const normalizedCategorySearch = normalizeSearchText(searchQuery).trim();
-  const matchesCategorySearch = (category: string) =>
-    !normalizedCategorySearch ||
-    normalizeSearchText(getCanonicalCategory(category)).includes(normalizedCategorySearch);
+  const normalizedProductSearch = normalizeSearchText(searchQuery).trim();
+  const matchesProductSearch = (product: Product) => {
+    if (!normalizedProductSearch) {
+      return true;
+    }
+
+    return [
+      product.name,
+      product.description,
+      product.venue,
+      getProductBrand(product),
+      ...(product.flavorOptions ?? []),
+      ...(product.variantOptions?.map((variantOption) => variantOption.name) ?? []),
+    ].some((value) => normalizeSearchText(value).includes(normalizedProductSearch));
+  };
 
   useEffect(() => {
     setSelectedPickupLocation(null);
@@ -674,16 +688,16 @@ export function Home({
   }, [pickupResetKey]);
 
   const venueProducts = PRODUCTS.filter((product) => product.venue === selectedVenue);
-  const activePickupLocation =
-    selectedPickupLocation ??
-    cartPickupLocations.find((location) => selectedVenue && VENUE_LOCATIONS[selectedVenue]?.includes(location)) ??
-    null;
+  const activePickupLocation = selectedPickupLocation;
+  const locationFilteredVenueProducts = activePickupLocation
+    ? venueProducts.filter((product) => isProductAvailableAtPickupLocation(product, activePickupLocation))
+    : venueProducts;
   const featuredProductsByVenue = venues.map((venue) => {
     const venueItems = PRODUCTS.filter(
       (product) =>
         product.venue === venue &&
         !product.isOutOfStock &&
-        matchesCategorySearch(product.category),
+        matchesProductSearch(product),
     );
 
     return {
@@ -691,17 +705,14 @@ export function Home({
       products: getSeededFeaturedProducts(venueItems, venue, featuredShuffleTick),
     };
   });
-  const categoryMatchedVenueProducts = venueProducts.filter((product) =>
-    matchesCategorySearch(product.category),
-  );
 	  const categories = [
 	    'Todas las categorías',
 	    ...Array.from(
-	      new Set(categoryMatchedVenueProducts.map((product) => getCanonicalCategory(product.category))),
+	      new Set(locationFilteredVenueProducts.map((product) => getCanonicalCategory(product.category))),
 	    ).sort((firstCategory, secondCategory) => firstCategory.localeCompare(secondCategory, 'es')),
 	  ];
 	  const showsBrandFilter = selectedVenue === 'La Cantina';
-	  const brandBaseProducts = categoryMatchedVenueProducts.filter(
+	  const brandBaseProducts = locationFilteredVenueProducts.filter(
 	    (product) =>
 	      selectedCategory === 'Todas las categorías' ||
 	      getCanonicalCategory(product.category) === selectedCategory,
@@ -809,7 +820,7 @@ export function Home({
     }
   }, [selectedVenue, selectedVenueLocations]);
 
-	  const filteredProducts = venueProducts.filter((product) => {
+	  const filteredProducts = locationFilteredVenueProducts.filter((product) => {
 	    const matchesCategory =
 	      selectedCategory === 'Todas las categorías' ||
 	      getCanonicalCategory(product.category) === selectedCategory;
@@ -817,7 +828,7 @@ export function Home({
 	      !showsBrandFilter ||
 	      selectedBrand === 'Todas las marcas' ||
 	      getProductBrand(product) === selectedBrand;
-    return matchesCategory && matchesBrand && matchesCategorySearch(product.category);
+    return matchesCategory && matchesBrand && matchesProductSearch(product);
   }).sort((firstProduct, secondProduct) => {
     if (!activePickupLocation) {
       return firstProduct.name.localeCompare(secondProduct.name, 'es');
@@ -940,6 +951,14 @@ export function Home({
   };
 
   const getResolvedPickupLocation = (product: Product) => {
+    if (
+      selectedPickupLocation &&
+      getProductPickupLocations(product).includes(selectedPickupLocation) &&
+      isProductAvailableAtPickupLocation(product, selectedPickupLocation)
+    ) {
+      return selectedPickupLocation;
+    }
+
     const pickupLocations = getProductPickupLocations(product);
 
     return pickupLocations.length === 1 ? pickupLocations[0] : null;
@@ -1056,6 +1075,12 @@ export function Home({
 
   const renderProductCard = (product: Product) => {
     const productImageUrls = getProductImageUrls(product);
+    const notifyStockAvailability = () => {
+      toast.success('Te avisaremos cuando haya stock', {
+        description: formatMenuText(product.name),
+        duration: 2500,
+      });
+    };
 
     return (
       <div
@@ -1123,31 +1148,37 @@ export function Home({
         <button
           onClick={(event) => {
             event.stopPropagation();
-            if (!product.isOutOfStock) {
-              if (getProductSelectionOptions(product).length) {
-                openProductDetail(product);
-                return;
-              }
-
-              const productWithPickupLocation = withPickupLocation(product);
-
-              if (!productWithPickupLocation) {
-                promptForPickupLocation(product);
-                return;
-              }
-
-              launchCartFlight(event);
-              onAddToCart(productWithPickupLocation);
+            if (product.isOutOfStock) {
+              notifyStockAvailability();
+              return;
             }
+
+            if (getProductSelectionOptions(product).length) {
+              openProductDetail(product);
+              return;
+            }
+
+            const productWithPickupLocation = withPickupLocation(product);
+
+            if (!productWithPickupLocation) {
+              promptForPickupLocation(product);
+              return;
+            }
+
+            launchCartFlight(event);
+            onAddToCart(productWithPickupLocation);
           }}
-          disabled={product.isOutOfStock}
-          className={`rounded-full p-2.5 transition-all shadow-md ${
+          className={`shrink-0 transition-all shadow-md ${
             product.isOutOfStock
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:scale-110 active:scale-95'
+              ? 'max-w-[7.5rem] rounded-xl border-2 border-emerald-200 bg-white px-3 py-2 text-[11px] font-extrabold leading-tight text-emerald-700 hover:bg-emerald-50 active:scale-95'
+              : 'rounded-full bg-emerald-600 p-2.5 text-white hover:bg-emerald-700 hover:scale-110 active:scale-95'
           }`}
         >
-          <Plus className="h-5 w-5" />
+          {product.isOutOfStock ? (
+            <span>Avisarme cuando haya stock</span>
+          ) : (
+            <Plus className="h-5 w-5" />
+          )}
         </button>
       </div>
     );
@@ -1349,6 +1380,10 @@ export function Home({
 	              type="button"
 	              onClick={(event) => {
 	                if (selectedProduct.isOutOfStock) {
+                    toast.success('Te avisaremos cuando haya stock', {
+                      description: formatMenuText(selectedProduct.name),
+                      duration: 2500,
+                    });
                     return;
                   }
 
@@ -1366,15 +1401,22 @@ export function Home({
 	                  closeProductDetail();
 	                }
 	              }}
-	              disabled={selectedProduct.isOutOfStock || needsFlavorSelection}
-	              className={`w-full py-4 rounded-2xl font-bold shadow-md transition-colors ${
-	                selectedProduct.isOutOfStock || needsFlavorSelection
+	              disabled={!selectedProduct.isOutOfStock && needsFlavorSelection}
+	              className={`flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-bold shadow-md transition-colors ${
+	                selectedProduct.isOutOfStock
+                    ? 'border-2 border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50'
+                    : needsFlavorSelection
 	                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 	                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
 	              }`}
 	            >
 	              {selectedProduct.isOutOfStock
-	                ? 'Sin stock'
+	                ? (
+                    <>
+                      <Bell className="h-5 w-5" />
+                      Avisarme cuando haya stock
+                    </>
+                  )
 	                : needsFlavorSelection
 	                ? 'Elegí una opción'
                   : needsPickupLocationSelection
@@ -1395,8 +1437,8 @@ export function Home({
       <div className="bg-emerald-600 px-6 py-4 text-white">
         <div className="flex items-center justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-600 shadow-md ring-2 ring-white/25">
-              <img src={sinfiLogo} alt="SinFi" className="h-[4.8rem] w-[4.8rem] object-cover" />
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#13c33e] shadow-md ring-2 ring-white/25">
+              <img src={sinfiLogo} alt="SinFi" className="h-11 w-11 object-contain" />
             </span>
             <div className="min-w-0">
               <p className="text-sm opacity-90">Hola,</p>
@@ -1416,8 +1458,29 @@ export function Home({
 
       <div className="sticky top-0 z-40 -mt-px">
         <div className="bg-slate-50 px-6 pt-4 pb-3">
-          <div className="grid w-full grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3 sm:items-end">
-            <div className={`${selectedVenue ? 'col-span-2 sm:col-span-1' : 'col-span-2 sm:col-span-3'} relative`}>
+          <div className={`grid w-full gap-x-4 gap-y-4 sm:items-end ${
+            selectedVenueLocations ? 'grid-cols-[2.75rem_1fr]' : 'grid-cols-2 sm:grid-cols-3'
+          }`}>
+            {selectedVenueLocations && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedVenueLocations(null);
+                  setPendingPickupSelections([]);
+                }}
+                className="flex h-11 w-11 items-center justify-center self-end rounded-2xl bg-white text-sky-900 shadow-sm ring-1 ring-emerald-100 transition-colors hover:bg-emerald-50 dark:bg-slate-900 dark:text-white dark:ring-slate-700 dark:hover:bg-slate-800"
+                aria-label="Volver"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+            )}
+            <div className={`${
+              selectedVenueLocations
+                ? 'relative min-w-0'
+                : selectedVenue
+                  ? 'col-span-1 relative'
+                  : 'col-span-2 sm:col-span-3 relative'
+            }`}>
 	              <button
 	                type="button"
 	                onClick={() => {
@@ -1432,7 +1495,7 @@ export function Home({
                     <MapPin className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 text-left">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">Punto de compra</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">Local</p>
                     <p className={`truncate text-[13px] font-bold ${selectedVenue ? 'text-gray-900' : 'text-gray-500'}`}>
                       {selectedVenue ?? 'Elegir lugar'}
                     </p>
@@ -1442,7 +1505,7 @@ export function Home({
               </button>
 
               {isVenueMenuOpen && (
-                <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 max-h-72 overflow-y-auto overscroll-contain rounded-xl border-2 border-emerald-200 bg-white p-1.5 shadow-xl">
+                <div className="absolute left-0 top-[calc(100%+6px)] z-50 w-[min(21rem,calc(100vw-3rem))] max-h-72 overflow-y-auto overscroll-contain rounded-xl border-2 border-emerald-200 bg-white p-1.5 shadow-xl">
                   <button
                     type="button"
                     onClick={() => {
@@ -1456,7 +1519,7 @@ export function Home({
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-50 text-sky-900">
                       <MapPin className="h-3 w-3" />
                     </span>
-                    <span className="text-sm font-bold">Elegir un lugar</span>
+                    <span className="whitespace-nowrap text-sm font-bold">Elegir un lugar</span>
                   </button>
                   {venues.map((venue) => (
                     <button
@@ -1473,12 +1536,57 @@ export function Home({
                       <span className="flex w-12 shrink-0 justify-center">
                         {getVenueBadge(venue)}
                       </span>
-                      <span className="text-sm font-bold">{venue}</span>
+                      <span className="whitespace-nowrap text-sm font-bold">{venue}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
+
+            {selectedVenue && !selectedVenueLocations && (
+              <div className="relative col-span-1 min-w-0">
+                <div className={`flex w-full items-center gap-2 border-b px-0 py-1.5 transition-colors ${
+                  activePickupLocation
+                    ? 'border-emerald-500'
+                    : 'border-emerald-300 hover:border-emerald-400'
+                }`}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedVenueLocations(selectedVenue);
+                      setIsVenueMenuOpen(false);
+                      setIsCategoryMenuOpen(false);
+                      setIsBrandMenuOpen(false);
+                    }}
+                    className="flex min-w-0 flex-1 items-center justify-between gap-2 text-left"
+                  >
+                    <div className="flex min-w-0 items-center gap-2">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center text-sky-900">
+                        <MapPin className="h-3.5 w-3.5" />
+                      </span>
+                      <div className="min-w-0 text-left">
+                        <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">Sucursal</p>
+                        <p className={`truncate text-[13px] font-bold ${activePickupLocation ? 'text-gray-900' : 'text-gray-500'}`}>
+                          {activePickupLocation ?? 'Elegir sucursal'}
+                        </p>
+                      </div>
+                    </div>
+                    <ChevronDown className="h-3.5 w-3.5 shrink-0 -rotate-90 text-gray-500" />
+                  </button>
+
+                  {selectedPickupLocation && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPickupLocation(null)}
+                      className="flex h-7 w-7 shrink-0 items-center justify-center text-sky-900 transition-colors hover:text-sky-950"
+                      aria-label="Limpiar sucursal"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
 	            {selectedVenue && !selectedVenueLocations && (
 	              <div className="col-span-2 grid min-w-0 grid-cols-2 gap-4 sm:col-span-2">
@@ -1498,7 +1606,7 @@ export function Home({
 	                        </span>
 	                        <div className="min-w-0 text-left">
 	                          <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">Categoría</p>
-	                          <p className="truncate text-[13px] font-bold text-gray-900">{selectedCategory}</p>
+	                          <p className="truncate text-[13px] font-bold text-gray-900">{getFilterDisplayText(selectedCategory)}</p>
 	                        </div>
 	                      </div>
 	                      <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-gray-500 transition-transform ${isCategoryMenuOpen ? 'rotate-180' : ''}`} />
@@ -1534,7 +1642,7 @@ export function Home({
                               : 'text-gray-800 hover:bg-slate-50'
                           }`}
                         >
-                          {category}
+                          {getFilterDisplayText(category)}
                         </button>
                       ))}
                     </div>
@@ -1558,7 +1666,7 @@ export function Home({
 	                          </span>
 	                          <div className="min-w-0 text-left">
 	                            <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-gray-400">Marca</p>
-	                            <p className="truncate text-[13px] font-bold text-gray-900">{selectedBrand}</p>
+	                            <p className="truncate text-[13px] font-bold text-gray-900">{getFilterDisplayText(selectedBrand)}</p>
 	                          </div>
 	                        </div>
 	                        <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-gray-500 transition-transform ${isBrandMenuOpen ? 'rotate-180' : ''}`} />
@@ -1594,7 +1702,7 @@ export function Home({
 	                                : 'text-gray-800 hover:bg-slate-50'
 	                            }`}
 	                          >
-	                            {brand}
+	                            {getFilterDisplayText(brand)}
 	                          </button>
 	                        ))}
 	                      </div>
@@ -1609,7 +1717,7 @@ export function Home({
           <div className="bg-slate-50 px-6 pb-4 pt-5">
             <div className="bg-white border-2 border-emerald-200 rounded-xl px-5 py-3 flex items-center justify-between gap-4 shadow-sm">
               <span className="text-base font-bold text-sky-900 truncate">
-                Categoría buscada: {searchQuery}
+                Producto buscado: {searchQuery}
               </span>
               <button
                 type="button"
@@ -1625,7 +1733,7 @@ export function Home({
       </div>
 
       <div className="px-6 pt-3 space-y-3">
-        {!selectedVenueLocations && lastOrderItems.length > 0 && (
+        {!selectedVenueLocations && !selectedVenue && lastOrderItems.length > 0 && (
           <button
             type="button"
             onClick={onRepeatLastOrder}
@@ -1666,39 +1774,6 @@ export function Home({
 
         {selectedVenueLocations && (
           <div className="space-y-3">
-            <div className="overflow-hidden rounded-[1.75rem] border-2 border-emerald-100 bg-white shadow-sm">
-              <div className="bg-[linear-gradient(135deg,#fff8dc_0%,#fffdf4_55%,#ffffff_100%)] px-4 py-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedVenueLocations(null);
-                        setPendingPickupSelections([]);
-                      }}
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-sky-900 shadow-sm ring-1 ring-emerald-100 transition-colors hover:bg-slate-50"
-                      aria-label="Volver"
-                    >
-                      <ArrowLeft className="h-5 w-5" />
-                    </button>
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-emerald-700">
-                        {pendingPickupSelections.length ? 'Elegí dónde retirar' : `Ubicaciones de ${selectedVenueLocations}`}
-                      </p>
-                      <p className="mt-1 max-w-[14rem] text-sm font-medium leading-relaxed text-gray-500">
-                        {pendingPickupSelections.length
-                          ? 'Seleccioná un punto para validar stock y agregarlo al carrito.'
-                          : getVenueLocationNote(selectedVenueLocations)}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="flex h-11 w-12 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-emerald-100">
-                    {getVenueBadge(selectedVenueLocations)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
             {getGroupedVenueLocations(selectedVenueLocations).map(({ building, details }) => (
               <div
                 key={building}
@@ -1714,7 +1789,6 @@ export function Home({
                     <div className="mt-3 space-y-2">
                       {details.map((detail) => {
                         const location = detail === building ? building : `${building}, ${detail}`;
-                        const hasLimitedMenu = Boolean(LIMITED_PICKUP_PRODUCT_IDS[location]);
                         const isSelectedLocation = selectedPickupLocation === location;
                         const hasCartItemsAtLocation = cartPickupLocations.includes(location);
                         const canUseLocation = canPendingSelectionsUsePickupLocation(location);
@@ -1731,7 +1805,7 @@ export function Home({
                                 : isSelectedLocation
                                 ? 'border-emerald-600 bg-emerald-50 text-emerald-950 shadow-md hover:bg-emerald-100 hover:shadow-lg active:scale-[0.99]'
                                 : hasCartItemsAtLocation
-                                  ? 'border-blue-200 bg-blue-50 text-blue-950 hover:bg-blue-100'
+                                  ? 'border-blue-200 bg-blue-50 text-blue-950 shadow-sm hover:bg-blue-100 dark:border-sky-400 dark:bg-sky-500/18 dark:text-sky-50 dark:shadow-[0_0_0_1px_rgba(56,189,248,0.24),0_12px_24px_rgba(14,165,233,0.12)] dark:hover:bg-sky-500/25'
                                 : 'border-transparent bg-slate-50/70 hover:border-emerald-200 hover:bg-emerald-50'
                             }`}
                           >
@@ -1742,28 +1816,9 @@ export function Home({
                                   : isSelectedLocation
                                   ? 'text-emerald-950'
                                   : hasCartItemsAtLocation
-                                    ? 'text-blue-950'
+                                    ? 'text-blue-950 dark:text-sky-50'
                                     : 'text-gray-700'
                               }`}>{detail}</span>
-                              <span className={`mt-0.5 block text-[11px] font-bold ${
-                                !canUseLocation
-                                  ? 'text-gray-400'
-                                  : isSelectedLocation
-                                  ? 'text-emerald-700'
-                                  : hasCartItemsAtLocation
-                                    ? 'text-blue-700'
-                                    : 'text-gray-400'
-                              }`}>
-                                {!canUseLocation
-                                  ? 'No disponible para este producto'
-                                  : isSelectedLocation
-                                  ? 'Retiro seleccionado · tocá para cambiar'
-                                  : hasCartItemsAtLocation
-                                    ? 'Ya tenés productos acá'
-                                  : hasLimitedMenu
-                                    ? 'Menú cargado para esta ubicación'
-                                    : 'Usa el menú general'}
-                              </span>
                             </span>
                             <ChevronDown className={`-rotate-90 h-4 w-4 shrink-0 ${
                               !canUseLocation
@@ -1771,7 +1826,7 @@ export function Home({
                                 : isSelectedLocation
                                 ? 'text-emerald-700'
                                 : hasCartItemsAtLocation
-                                  ? 'text-blue-700'
+                                  ? 'text-blue-700 dark:text-sky-200'
                                   : 'text-sky-900'
                             }`} />
                           </button>
@@ -1846,10 +1901,13 @@ export function Home({
         <button
           type="button"
           onClick={handleBackToTop}
-          className="back-to-top-bounce fixed right-5 bottom-21 z-50 flex h-12 w-12 items-center justify-center rounded-full border-2 border-white bg-black text-white shadow-[0_12px_28px_rgba(0,0,0,0.32)] ring-4 ring-emerald-50/90 hover:bg-neutral-900 active:scale-95 transition-all"
+          className="back-to-top-bounce fixed right-5 bottom-21 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-slate-200/95 text-slate-600 shadow-[0_8px_18px_rgba(15,23,42,0.18)] ring-1 ring-slate-300/80 transition-all hover:bg-slate-300 active:scale-95 dark:bg-slate-700/95 dark:text-slate-200 dark:ring-slate-600"
           aria-label="Volver al inicio"
         >
-          <ChevronUp className="w-6 h-6" />
+          <span className="flex flex-col items-center justify-center gap-0">
+            <ChevronUp className="h-4 w-4 -mb-2" />
+            <ChevronUp className="h-4 w-4" />
+          </span>
         </button>
       )}
 

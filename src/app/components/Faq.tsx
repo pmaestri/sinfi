@@ -7,28 +7,32 @@ interface FaqProps {
 
 const FAQ_ITEMS = [
   {
+    question: '¿Cómo busco un producto?',
+    answer: 'Tocá la lupa, escribí el nombre del producto o una marca y presioná “Buscar”. La búsqueda no filtra por categorías.',
+  },
+  {
     question: '¿Dónde retiro mi pedido?',
-    answer: 'En el punto de compra indicado en el seguimiento. Si pediste en más de un local, cada local aparece separado.',
+    answer: 'Retirás en el punto que elegiste al agregar los productos. Si pediste en más de un local, el seguimiento muestra cada punto de retiro por separado.',
   },
   {
     question: '¿Cómo sé cuándo está listo?',
-    answer: 'La pantalla de seguimiento muestra el estado del pedido, la barra de progreso y el tiempo estimado.',
+    answer: 'La pantalla de seguimiento muestra el estado del pedido, la barra de progreso y el tiempo estimado de preparación.',
   },
   {
     question: '¿Qué significa “Ya llegué”?',
-    answer: 'Sirve para avisar al local que ya estás en el punto de retiro y que pueden preparar la entrega.',
+    answer: 'Sirve para avisar que ya estás en el punto de retiro y que pueden preparar la entrega.',
   },
   {
     question: '¿Puedo pedir en más de un local?',
-    answer: 'Sí. El seguimiento separa los tiempos por local y podés retirar primero el pedido que esté listo antes.',
+    answer: 'Sí. Podés agregar productos de distintos locales al mismo carrito. Después, el seguimiento separa los tiempos y puntos de retiro.',
   },
   {
     question: '¿Se guarda mi carrito si salgo?',
-    answer: 'Sí. El carrito queda guardado por cuenta, así no se mezcla con el pedido de otro usuario.',
+    answer: 'Sí. El carrito queda guardado por usuario.',
   },
   {
-    question: '¿Puedo repetir un pedido anterior?',
-    answer: 'Sí. Si ya confirmaste un pedido, aparece el botón “Repetir último pedido” para volver a cargarlo al carrito.',
+    question: '¿Cómo repito mi último pedido?',
+    answer: 'Después de confirmar un pedido, aparece “Repetir último pedido” en el inicio y también en el carrito vacío. Tocá ese botón para agregar los mismos productos al carrito.',
   },
   {
     question: '¿Cómo identifico mi pedido?',
@@ -37,6 +41,10 @@ const FAQ_ITEMS = [
   {
     question: '¿Qué pasa si un producto no tiene stock?',
     answer: 'Los productos sin stock aparecen bloqueados y no se pueden agregar al carrito.',
+  },
+  {
+    question: '¿Para qué sirve “Avisarme cuando haya stock”?',
+    answer: 'Sirve para dejar registrado que querés enterarte cuando un producto vuelva a estar disponible. Tocá el botón en el producto sin stock y la app confirma el aviso.',
   },
   {
     question: '¿Qué medios de pago puedo usar?',

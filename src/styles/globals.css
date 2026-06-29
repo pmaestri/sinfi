@@ -106,3 +106,104 @@
 .selector-attention {
   animation: selector-attention 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
+
+/* Global dark mode overrides for the Tailwind utility-heavy app. */
+.dark {
+  color-scheme: dark;
+}
+
+.dark body,
+.dark .bg-gray-50,
+.dark .bg-slate-50,
+.dark .bg-slate-50\/60,
+.dark .bg-slate-50\/70 {
+  background-color: rgb(9 18 24) !important;
+}
+
+.dark .bg-white,
+.dark .bg-white\/80,
+.dark .bg-white\/90,
+.dark .bg-white\/95,
+.dark .bg-white\/96 {
+  background-color: rgb(15 23 30 / 0.96) !important;
+}
+
+.dark .bg-gray-100,
+.dark .bg-emerald-50,
+.dark .bg-emerald-50\/70,
+.dark .bg-blue-50,
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-emerald-50:hover,
+.dark .hover\:bg-emerald-50\/90:hover,
+.dark .hover\:bg-blue-100:hover {
+  background-color: rgb(21 35 42) !important;
+}
+
+.dark .border-gray-200,
+.dark .border-gray-300,
+.dark .border-emerald-100,
+.dark .border-emerald-200,
+.dark .border-emerald-300,
+.dark .border-blue-200,
+.dark .ring-emerald-50,
+.dark .ring-emerald-100,
+.dark .ring-emerald-200,
+.dark .ring-blue-200 {
+  border-color: rgb(37 64 72) !important;
+  --tw-ring-color: rgb(37 64 72) !important;
+}
+
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-sky-900,
+.dark .text-sky-950,
+.dark .text-blue-950,
+.dark .text-emerald-950 {
+  color: rgb(241 245 249) !important;
+}
+
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-gray-500,
+.dark .text-sky-800,
+.dark .text-emerald-700,
+.dark .text-blue-700 {
+  color: rgb(203 213 225) !important;
+}
+
+.dark .text-gray-400 {
+  color: rgb(148 163 184) !important;
+}
+
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: rgb(9 18 24) !important;
+  border-color: rgb(51 65 85) !important;
+  color: rgb(241 245 249) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgb(148 163 184) !important;
+}
+
+.dark .shadow-md,
+.dark .shadow-lg,
+.dark .shadow-xl,
+.dark .shadow-2xl,
+.dark .shadow-sm {
+  --tw-shadow-color: rgb(0 0 0 / 0.45) !important;
+}
+
+.dark [data-sonner-toast][data-type="success"] {
+  background-color: rgb(6 78 59) !important;
+  border-color: rgb(16 185 129) !important;
+  color: rgb(236 253 245) !important;
+}
+
+.dark [data-sonner-toast][data-type="error"] {
+  background-color: rgb(127 29 29) !important;
+  border-color: rgb(248 113 113) !important;
+  color: rgb(254 242 242) !important;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, Trash2, Plus, Minus } from 'lucide-react';
+import { ArrowLeft, Trash2, Plus, Minus, RotateCcw } from 'lucide-react';
 import { formatMenuText } from '../utils/menuText';
 
 interface CartItem {
@@ -33,17 +33,21 @@ const getWaitTimeBarColor = (waitTimeMinutes: number) => {
 
 interface CartProps {
   items: CartItem[];
+  lastOrderItems: CartItem[];
   onBack: () => void;
   onCheckout: () => void;
   onUpdateQuantity: (cartKey: string, delta: number) => void;
   onRemoveItem: (cartKey: string) => void;
   onClearCart: () => void;
+  onRepeatLastOrder: () => void;
 }
 
-export function Cart({ items, onBack, onCheckout, onUpdateQuantity, onRemoveItem, onClearCart }: CartProps) {
+export function Cart({ items, lastOrderItems, onBack, onCheckout, onUpdateQuantity, onRemoveItem, onClearCart, onRepeatLastOrder }: CartProps) {
   const [isClearCartModalOpen, setIsClearCartModalOpen] = useState(false);
   const [itemPendingRemoval, setItemPendingRemoval] = useState<CartItem | null>(null);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const lastOrderItemCount = lastOrderItems.reduce((sum, item) => sum + item.quantity, 0);
+  const lastOrderTotal = lastOrderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   useEffect(() => {
     if (!isClearCartModalOpen && !itemPendingRemoval) {
@@ -74,10 +78,32 @@ export function Cart({ items, onBack, onCheckout, onUpdateQuantity, onRemoveItem
 
       <div className="flex-1 overflow-y-auto p-6 pb-8">
         {items.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="mx-auto max-w-md py-12 text-center">
             <div className="text-6xl mb-4">🛒</div>
             <h2 className="text-xl font-semibold text-gray-700 mb-2">Tu carrito está vacío</h2>
             <p className="text-gray-500">Agregá productos para comenzar tu pedido</p>
+            {lastOrderItems.length > 0 && (
+              <button
+                type="button"
+                onClick={onRepeatLastOrder}
+                className="mt-6 flex w-full items-center justify-between gap-3 rounded-xl border-2 border-emerald-200 bg-white px-4 py-3 text-left shadow-sm transition-colors hover:border-emerald-500 hover:bg-emerald-50 active:scale-[0.99]"
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm">
+                    <RotateCcw className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-extrabold text-gray-900">Repetir último pedido</span>
+                    <span className="block truncate text-xs font-bold text-gray-500">
+                      {lastOrderItemCount} {lastOrderItemCount === 1 ? 'producto' : 'productos'} · ${lastOrderTotal.toLocaleString()}
+                    </span>
+                  </span>
+                </span>
+                <span className="shrink-0 rounded-full bg-emerald-50 px-3 py-1 text-xs font-extrabold text-sky-900">
+                  Agregar
+                </span>
+              </button>
+            )}
           </div>
         ) : (
           <div className="space-y-3 max-w-2xl mx-auto">

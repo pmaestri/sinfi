@@ -1,25 +1,34 @@
-import { useState } from 'react';
-import { ArrowLeft, Lock, LogOut, Pencil, Save, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Lock, LogOut, Moon, Pencil, Save, Sun, User } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AccountProps {
   userName: string;
+  isDarkMode: boolean;
+  onToggleDarkMode: () => void;
   onBack: () => void;
   onLogout: () => void;
   onUpdateName: (name: string) => void;
 }
 
-export function Account({ userName, onBack, onLogout, onUpdateName }: AccountProps) {
+export function Account({ userName, isDarkMode, onToggleDarkMode, onBack, onLogout, onUpdateName }: AccountProps) {
   const [name, setName] = useState(userName);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
+  const savedName = userName.trim();
+  const trimmedName = name.trim();
+  const hasProfileChanges = Boolean(trimmedName) && trimmedName !== savedName;
+
+  useEffect(() => {
+    setName(userName);
+  }, [userName]);
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!hasProfileChanges) return;
 
-    onUpdateName(name.trim());
+    onUpdateName(trimmedName);
     toast.success('Perfil actualizado', {
       description: 'Guardamos los cambios de tu cuenta.',
       duration: 2500,
@@ -58,6 +67,35 @@ export function Account({ userName, onBack, onLogout, onUpdateName }: AccountPro
       </div>
 
       <div className="p-6 space-y-6 max-w-2xl mx-auto">
+        <div className="bg-white rounded-xl p-6 shadow-md border-2 border-emerald-100">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="bg-emerald-50 text-sky-900 w-12 h-12 rounded-full flex items-center justify-center">
+                {isDarkMode ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
+              </div>
+              <div className="min-w-0">
+                <h2 className="font-bold text-gray-900 text-lg">Modo oscuro</h2>
+                <p className="text-sm text-gray-600 font-medium">Aplicar tema oscuro en toda la app.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onToggleDarkMode}
+              className={`relative h-8 w-14 shrink-0 rounded-full p-1 transition-colors ${
+                isDarkMode ? 'bg-emerald-600' : 'bg-gray-300'
+              }`}
+              aria-pressed={isDarkMode}
+              aria-label="Cambiar modo oscuro"
+            >
+              <span
+                className={`block h-6 w-6 rounded-full bg-white shadow-md transition-transform ${
+                  isDarkMode ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
         <form onSubmit={handleSaveProfile} className="bg-white rounded-xl p-6 shadow-md border-2 border-emerald-100 space-y-4">
           <div className="flex items-center justify-between gap-3">
             <div className="bg-emerald-50 text-sky-900 w-12 h-12 rounded-full flex items-center justify-center">
@@ -84,7 +122,7 @@ export function Account({ userName, onBack, onLogout, onUpdateName }: AccountPro
 
           <button
             type="submit"
-            disabled={!name.trim()}
+            disabled={!hasProfileChanges}
             className="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-md"
           >
             <Save className="w-5 h-5" />

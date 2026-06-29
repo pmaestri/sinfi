@@ -47,6 +47,7 @@ interface CartItem extends Product {
 const CART_STORAGE_PREFIX = 'la-sede-cart';
 const LAST_ORDER_STORAGE_PREFIX = 'la-sede-last-order';
 const ACTIVE_ACCOUNT_STORAGE_KEY = 'la-sede-active-account';
+const THEME_STORAGE_KEY = 'sinfi-theme';
 
 const getAccountStorageKey = (prefix: string, accountName: string) =>
   `${prefix}:${accountName.trim().toLowerCase()}`;
@@ -105,6 +106,22 @@ const writeStoredAccountName = (accountName: string) => {
   }
 };
 
+const readStoredTheme = () => {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY) === 'dark';
+  } catch {
+    return false;
+  }
+};
+
+const writeStoredTheme = (isDarkMode: boolean) => {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, isDarkMode ? 'dark' : 'light');
+  } catch {
+    // If storage is unavailable, keep the in-memory theme working.
+  }
+};
+
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>(() =>
     readStoredAccountName() ? 'home' : 'onboarding',
@@ -120,6 +137,7 @@ export default function App() {
   const [orderNumber, setOrderNumber] = useState('');
   const [orderTotal, setOrderTotal] = useState(0);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => readStoredTheme());
   const [searchQuery, setSearchQuery] = useState('');
   const [homePickupResetKey, setHomePickupResetKey] = useState(0);
   const cartButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -359,8 +377,13 @@ export default function App() {
     };
   }, [isSearchOpen]);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    writeStoredTheme(isDarkMode);
+  }, [isDarkMode]);
+
   return (
-    <div className="size-full">
+    <div className={isDarkMode ? 'dark size-full' : 'size-full'}>
       <Toaster position="top-center" richColors />
       {currentScreen === 'onboarding' && (
         <Onboarding onComplete={() => setCurrentScreen('login')} />
@@ -404,11 +427,13 @@ export default function App() {
       {currentScreen === 'cart' && (
         <Cart
           items={cart}
+          lastOrderItems={lastOrderItems}
           onBack={() => setCurrentScreen('home')}
           onCheckout={() => setCurrentScreen('checkout')}
           onUpdateQuantity={handleUpdateQuantity}
           onRemoveItem={handleRemoveItem}
           onClearCart={handleClearCart}
+          onRepeatLastOrder={handleRepeatLastOrder}
         />
       )}
 
@@ -443,6 +468,8 @@ export default function App() {
       {currentScreen === 'account' && (
         <Account
           userName={userName}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode((currentValue) => !currentValue)}
           onBack={() => setCurrentScreen('home')}
           onLogout={handleLogout}
           onUpdateName={handleUpdateName}
@@ -451,8 +478,8 @@ export default function App() {
 
       {showBottomNav && (
         <div className="fixed bottom-0 left-0 right-0 z-50 px-0 pb-0 pointer-events-none">
-          <nav className="relative grid w-full grid-cols-5 items-center rounded-none border-t-2 border-emerald-100 bg-white/96 px-5 py-2 shadow-[0_-10px_30px_rgba(15,118,110,0.14)] backdrop-blur-xl pointer-events-auto">
-            <div className="pointer-events-none absolute inset-x-6 top-1 h-px rounded-full bg-emerald-50/80" />
+          <nav className="relative grid w-full grid-cols-5 items-center rounded-none border-t-2 border-emerald-100 bg-white/96 px-5 py-2 shadow-[0_-10px_30px_rgba(15,118,110,0.14)] backdrop-blur-xl pointer-events-auto dark:border-slate-700 dark:bg-slate-950/96">
+            <div className="pointer-events-none absolute inset-x-6 top-1 h-px rounded-full bg-emerald-50/80 dark:bg-slate-800/70" />
             <div
               className={`pointer-events-none absolute inset-x-5 top-2 h-12 transition-opacity duration-200 ${
                 activeNavIndex === -1 ? 'opacity-0' : 'opacity-100'
@@ -462,7 +489,7 @@ export default function App() {
                 className="flex h-12 w-1/5 justify-center transition-transform duration-300 ease-out"
                 style={{ transform: `translateX(${activeNavIndex * 100}%)` }}
               >
-                <div className="h-12 w-12 rounded-full bg-emerald-600 shadow-[0_10px_24px_rgba(5,150,105,0.32)] ring-4 ring-emerald-50" />
+                <div className="h-12 w-12 rounded-full bg-emerald-600 shadow-[0_10px_24px_rgba(5,150,105,0.32)] ring-4 ring-emerald-50 dark:ring-slate-900" />
               </div>
             </div>
             <button
@@ -529,10 +556,7 @@ export default function App() {
           >
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Buscar por categoría</h2>
-                <p className="text-sm text-gray-600 font-medium mt-1">
-                  Encontrá una categoría y después filtrá por marca.
-                </p>
+                <h2 className="text-xl font-bold text-gray-900">Buscar producto</h2>
               </div>
               <button
                 onClick={() => setIsSearchOpen(false)}
@@ -546,7 +570,7 @@ export default function App() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-600" />
               <input
                 type="text"
-                placeholder="Buscar categorías..."
+                placeholder="Buscar producto..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
@@ -566,7 +590,7 @@ export default function App() {
               className="w-full mt-4 bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition-colors shadow-md"
               type="button"
             >
-              Ver categorías
+              Buscar
             </button>
           </div>
         </div>
